@@ -21,7 +21,7 @@ class Irads(object):
       
 class Something(object):
   @cherrypy.expose
-  def index():
+  def index(self):
     return "This should probably have an index..."
 
 #This will map the object to '/'
