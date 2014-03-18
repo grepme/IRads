@@ -1,34 +1,47 @@
 import cherrypy
+from config import *
+from mako.template import Template
+from mako.lookup import TemplateLookup
+
+lookup = TemplateLookup(directories=['templates'])
 
 
 class Irads(object):
-    #This will expose the object to the web.
+    # This will expose the object to the web.
     # ie. Think public vs. private definitions.
+
     @cherrypy.expose
     def index(self):
         return "Hello World! This is the start of the project!"
-    
-    #This will map the definition to '/page1'
+
+    # This will map the definition to '/page1'
     @cherrypy.expose
     def page1(self):
-      return "This is a side page"
-      
-    #This will map the definition to '/page2/[variable1]'
+        return "This is a side page"
+
+    # This will map the definition to '/page2/[variable1]'
     #[variable 1 being the first variable]
     @cherrypy.expose
     def page2(self, var):
-      return "You sent me the variable!: " + str(var)
-      
-class Something(object):
-  @cherrypy.expose
-  def index(self):
-    return "This should probably have an index..."
+        return "You sent me the variable!: " + str(var)
 
-#This will map the object to '/'
+    @cherrypy.expose
+    def login(self):
+        template = lookup.get_template('login.mako')
+        return template.render()
+
+
+class Something(object):
+
+    @cherrypy.expose
+    def index(self):
+        return "This should probably have an index..."
+
+# This will map the object to '/'
 Mapping = Irads()
 
-#I can map the class to '/somethingelse' instead!
+# I can map the class to '/somethingelse' instead!
 Mapping.somethingelse = Something()
 
-#Plug it into the quickstart with the default config.
+# Plug it into the quickstart with the default config.
 cherrypy.quickstart(Mapping)
