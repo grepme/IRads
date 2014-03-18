@@ -43,7 +43,12 @@ if (__name__ == '__main__'):
     # I can map the class to '/somethingelse' instead!
     Mapping.somethingelse = Something()
 
-    config = {'/': {'tools.staticdir.root': current_dir}, '/css':
+    config = {'/': {'tools.staticdir.root': current_dir,
+					'tools.sessions.on': True,
+					'tools.sessions.storage_type': "ram",
+					'tools.sessions.timeout': 3600
+					},
+	         '/css':
              {'tools.staticdir.on': True, 'tools.staticdir.dir': 'css'}}
 
     # Plug it into the quickstart with the default config.
