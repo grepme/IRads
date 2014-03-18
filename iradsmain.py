@@ -3,6 +3,7 @@ import os.path
 from authentication import *
 from config import *
 from mako.lookup import TemplateLookup
+from database.database import Database
 
 lookup = TemplateLookup(directories=['templates'])
 
@@ -77,6 +78,11 @@ if (__name__ == '__main__'):
     Mapping.report = IradsReport()
     Mapping.search = IradsSearch()
     Mapping.upload = IradsUpload()
+	
+	#Connect to the database
+	database = Database(connect=True)
+	database.connect(DATABASE_USERNAME, DATABASE_PASSWORD, DATABASE_HOSTNAME, DATABASE)
+	
 
     # Plug it into the quickstart with the default config.
     cherrypy.quickstart(Mapping, '/', config=config)
