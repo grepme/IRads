@@ -1,5 +1,5 @@
 <%include file="../header.mako" args="pageTitle='Upload'" />
-  <link href="../css/main.css" rel="stylesheet">
+  <link href="../css/upload.css" rel="stylesheet">
 
     <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
     <!--[if lt IE 9]>
@@ -14,16 +14,14 @@
 
     <div class="container">
 
-      <!-- Main component for a primary marketing message or call to action -->
-      <div class="jumbotron">
-        <h1>Navbar example</h1>
-        <p>This example is a quick exercise to illustrate how the default, static and fixed to top navbar work. It includes the responsive CSS and HTML, so it also adapts to your viewport and device.</p>
-        <p>To see the difference between static and fixed top navbars, just scroll.</p>
-        <p>
-          <a class="btn btn-lg btn-primary" href="../../components/#navbar" role="button">View navbar docs &raquo;</a>
-        </p>
-      </div>
+      <form class="form-upload" role="form">
+        <h2 class="form-upload-heading">Choose a file:</h2>
+        <input type="file" id="radiologyimage">
+        <p class="help-block">Choose a .jpg file to upload.</p>
+        <button class="btn btn-lg btn-primary btn-block" type="submit">Upload</button>
+      </form>
 
+    </div>
     </div>
 
 <%include file="../footer.mako"/>

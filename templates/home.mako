@@ -15,7 +15,6 @@
 
     <div class="container">
 
-      <!-- Main component for a primary marketing message or call to action -->
       <div class="jumbotron">
         <h1>Welcome to Irads</h1>
         <p>Please select one of the menu options above.</p>

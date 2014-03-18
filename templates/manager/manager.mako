@@ -14,15 +14,36 @@
 
     <div class="container">
 
-      <!-- Main component for a primary marketing message or call to action -->
-      <div class="jumbotron">
-        <h1>Navbar example</h1>
-        <p>This example is a quick exercise to illustrate how the default, static and fixed to top navbar work. It includes the responsive CSS and HTML, so it also adapts to your viewport and device.</p>
-        <p>To see the difference between static and fixed top navbars, just scroll.</p>
-        <p>
-          <a class="btn btn-lg btn-primary" href="../../components/#navbar" role="button">View navbar docs &raquo;</a>
-        </p>
-      </div>
+      <table class="table table-striped">
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Username</th>
+          <th>Class</th>
+          <th>Date Registered</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>1</td>
+          <td>user1</td>
+          <td>Admin</td>
+          <td>test</td>
+        </tr>
+        <tr>
+          <td>2</td>
+          <td>user2</td>
+          <td>User</td>
+          <td>test</td>
+        </tr>
+        <tr>
+          <td>3</td>
+          <td>user3</td>
+          <td>Doctor</td>
+          <td>test</td>
+        </tr>
+      </tbody>
+      </table>
 
     </div>
 
