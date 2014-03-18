@@ -1,5 +1,6 @@
 import cherrypy
 import os.path
+from authentication import *
 from config import *
 from mako.template import Template
 from mako.lookup import TemplateLookup
