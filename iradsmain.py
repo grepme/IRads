@@ -8,6 +8,7 @@ lookup = TemplateLookup(directories=['templates'])
 
 
 class Irads(object):
+
     @cherrypy.expose
     def index(self):
         template = lookup.get_template('login.mako')
@@ -20,6 +21,7 @@ class Irads(object):
 
 
 class IradsAnalysis(object):
+
     @cherrypy.expose
     def index(self):
         template = lookup.get_template('analysis/analysis.mako')
@@ -27,6 +29,7 @@ class IradsAnalysis(object):
 
 
 class IradsManager(object):
+
     @cherrypy.expose
     def index(self):
         template = lookup.get_template('manager/manager.mako')
@@ -34,6 +37,7 @@ class IradsManager(object):
 
 
 class IradsReport(object):
+
     @cherrypy.expose
     def index(self):
         template = lookup.get_template('report/report.mako')
@@ -41,6 +45,7 @@ class IradsReport(object):
 
 
 class IradsSearch(object):
+
     @cherrypy.expose
     def index(self):
         template = lookup.get_template('search/search.mako')
@@ -48,6 +53,7 @@ class IradsSearch(object):
 
 
 class IradsUpload(object):
+
     @cherrypy.expose
     def index(self):
         template = lookup.get_template('upload/upload.mako')
@@ -58,11 +64,11 @@ if (__name__ == '__main__'):
     current_dir = os.path.dirname(os.path.abspath(__file__))
 
     config = {'/': {'tools.staticdir.root': current_dir,
-					'tools.sessions.on': True,
-					'tools.sessions.storage_type': "ram",
-					'tools.sessions.timeout': 3600
-					},
-	         '/css':
+                    'tools.sessions.on': True,
+                    'tools.sessions.storage_type': "ram",
+                    'tools.sessions.timeout': 3600
+                    },
+              '/css':
              {'tools.staticdir.on': True, 'tools.staticdir.dir': 'css'}}
 
     Mapping = Irads()
