@@ -1,4 +1,4 @@
-<%include file="../header.mako" args="pageTitle='User Manager'" />
+<%include file="../header.mako" args="pageTitle='Upload'" />
   <link href="../css/main.css" rel="stylesheet">
 
     <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
@@ -10,7 +10,7 @@
 
   <body>
 
-    <%include file="../navbars/admin.mako" args="currentPage='manager'"/>
+    <%include file="../navbars/admin.mako" args="currentPage='upload'"/>
 
     <div class="container">
 
