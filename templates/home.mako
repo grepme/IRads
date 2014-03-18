@@ -1,4 +1,4 @@
-<%include file="header.mako" args="pageTitle='Login'" />
+<%include file="header.mako" args="pageTitle='Home'" />
 
   <link href="css/main.css" rel="stylesheet">
 
