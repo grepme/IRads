@@ -57,7 +57,12 @@ class IradsUpload(object):
 if (__name__ == '__main__'):
     current_dir = os.path.dirname(os.path.abspath(__file__))
 
-    config = {'/': {'tools.staticdir.root': current_dir}, '/css':
+    config = {'/': {'tools.staticdir.root': current_dir,
+					'tools.sessions.on': True,
+					'tools.sessions.storage_type': "ram",
+					'tools.sessions.timeout': 3600
+					},
+	         '/css':
              {'tools.staticdir.on': True, 'tools.staticdir.dir': 'css'}}
 
     Mapping = Irads()
