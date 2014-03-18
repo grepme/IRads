@@ -8,43 +8,64 @@ lookup = TemplateLookup(directories=['templates'])
 
 
 class Irads(object):
-    # This will expose the object to the web.
-    # ie. Think public vs. private definitions.
-
     @cherrypy.expose
     def index(self):
         template = lookup.get_template('login.mako')
         return template.render()
 
-    # This will map the definition to '/page1'
     @cherrypy.expose
-    def page1(self):
-        return "This is a side page"
-
-    # This will map the definition to '/page2/[variable1]'
-    #[variable 1 being the first variable]
-    @cherrypy.expose
-    def page2(self, var):
-        return "You sent me the variable!: " + str(var)
+    def home(self):
+        template = lookup.get_template('home.mako')
+        return template.render()
 
 
-class Something(object):
-
+class IradsAnalysis(object):
     @cherrypy.expose
     def index(self):
-        return "This should probably have an index..."
+        template = lookup.get_template('analysis/analysis.mako')
+        return template.render()
+
+
+class IradsManager(object):
+    @cherrypy.expose
+    def index(self):
+        template = lookup.get_template('manager/manager.mako')
+        return template.render()
+
+
+class IradsReport(object):
+    @cherrypy.expose
+    def index(self):
+        template = lookup.get_template('report/report.mako')
+        return template.render()
+
+
+class IradsSearch(object):
+    @cherrypy.expose
+    def index(self):
+        template = lookup.get_template('search/search.mako')
+        return template.render()
+
+
+class IradsUpload(object):
+    @cherrypy.expose
+    def index(self):
+        template = lookup.get_template('upload/upload.mako')
+        return template.render()
+
 
 if (__name__ == '__main__'):
     current_dir = os.path.dirname(os.path.abspath(__file__))
 
-    # This will map the object to '/'
-    Mapping = Irads()
-
-    # I can map the class to '/somethingelse' instead!
-    Mapping.somethingelse = Something()
-
     config = {'/': {'tools.staticdir.root': current_dir}, '/css':
              {'tools.staticdir.on': True, 'tools.staticdir.dir': 'css'}}
+
+    Mapping = Irads()
+    Mapping.analysis = IradsAnalysis()
+    Mapping.manager = IradsManager()
+    Mapping.report = IradsReport()
+    Mapping.search = IradsSearch()
+    Mapping.upload = IradsUpload()
 
     # Plug it into the quickstart with the default config.
     cherrypy.quickstart(Mapping, '/', config=config)
