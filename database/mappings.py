@@ -49,7 +49,7 @@ class Users(Base):
     class_type = Column(String(1), name="class")
 
     # Relationships
-        person = relationship("Persons", backref="users")
+    person = relationship("Persons", backref="users")
 
 
 # To indicate who is whose family doctor
