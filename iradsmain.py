@@ -5,10 +5,11 @@ from config import *
 from mako.lookup import TemplateLookup
 from database.database import Database
 from database.mappings import *
-from sqlalchemy.orm.exc import NoResultFound
+from sqlalchemy.orm.exc import NoResultFound, MultipleResultsFound
 
+database = None
 lookup = TemplateLookup(directories=['templates'])
-
+user = None
 
 class Irads(object):
 
@@ -19,20 +20,26 @@ class Irads(object):
 
     @cherrypy.expose
     def checkLogin(self, username=None, password=None):
+        global database
+        global user
         session = database.get()
         query = session.query(Users).filter(
             Users.user_name == username).filter(Users.password == password)
         try:
-            query.one()
+            user = query.one()
             raise cherrypy.HTTPRedirect("/home")
         except NoResultFound:
+            template = lookup.get_template('login.mako')
+            return template.render(loginFailed=1)
+        except MultipleResultsFound:
             template = lookup.get_template('login.mako')
             return template.render(loginFailed=1)
 
     @cherrypy.expose
     def home(self):
+        global user
         template = lookup.get_template('home.mako')
-        return template.render()
+        return template.render(username=user.user_name, classtype=user.class_type)
 
 
 class IradsAnalysis(object):
@@ -75,7 +82,8 @@ class IradsUpload(object):
         return template.render()
 
 
-if (__name__ == '__main__'):
+def main():
+    global database
     current_dir = os.path.dirname(os.path.abspath(__file__))
 
     config = {'/': {'tools.staticdir.root': current_dir,
@@ -103,3 +111,6 @@ if (__name__ == '__main__'):
 
     # Plug it into the quickstart with the default config.
     cherrypy.quickstart(Mapping, '/', config=config)
+
+if (__name__ == '__main__'):
+    main()

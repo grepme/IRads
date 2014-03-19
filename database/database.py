@@ -15,7 +15,7 @@ class Database():
 
     def connect(self, username, password, host, database):
         # Create a connection and store it in the current thread
-        print "Opening SQLAlchemy Connection...",
+        print "Opening SQLAlchemy Connection..."
         Database.db = create_engine('mysql://' + username + ':' +
                                     password + '@' + host + '/' + database, echo=True, encoding='utf8')
 

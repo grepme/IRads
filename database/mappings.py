@@ -42,7 +42,7 @@ class Users(Base):
     id = Column(Integer, primary_key=True)
     user_name = Column(String(24))
     password = Column(String(24))
-    data_registered = Column(Date)
+    date_registered = Column(Date)
     person_id = Column(Integer, ForeignKey("persons.person_id"))
 
     # Check constraint not supported in MySQL

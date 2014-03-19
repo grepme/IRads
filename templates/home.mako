@@ -11,7 +11,7 @@
 
   <body>
 
-    <%include file="navbars/admin.mako" args="currentPage='home'"/>
+    <%include file="navbars/navbar.mako" args="currentPage='home'"/>
 
     <div class="container">
 
