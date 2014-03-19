@@ -62,9 +62,9 @@ class FamilyDoctor(Base):
                         ForeignKey('persons.person_id'), primary_key=True)
 
     # Relationships
-    doctor = Relationship("Persons",
+    doctor = relationship("Persons",
                           foreign_keys=[doctor_id], backref="caresFor")
-    patient = Relationship("Persons",
+    patient = relationship("Persons",
                            foreign_keys=[patient_id], backref="patient")
 
 
@@ -83,11 +83,11 @@ class RadiologyRecord(Base):
     description = Column(String(1024))
 
     # Relationships
-    doctor = Relationship("Persons",
+    doctor = relationship("Persons",
                           foreign_keys=[doctor_id], backref="radiologyrecords_doctor")
-    patient = Relationship("Persons",
+    patient = relationship("Persons",
                            foreign_keys=[patient_id], backref="radiologyrecords")
-    radiologist = Relationship("Persons",
+    radiologist = relationship("Persons",
                                foreign_keys=[radiologist_id], backref="radiologyrecords_radiologist")
 
 
@@ -103,4 +103,4 @@ class PacsImages(Base):
     full_size = Column(LargeBinary)
 
     # Relationships
-    doctor = Relationship("RadiologyRecord", backref="pacsimage")
+    doctor = relationship("RadiologyRecord", backref="pacsimage")
