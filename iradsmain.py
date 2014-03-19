@@ -52,40 +52,45 @@ class IradsAnalysis(object):
 
     @cherrypy.expose
     def index(self):
+        global user
         template = lookup.get_template('analysis/analysis.mako')
-        return template.render()
+        return template.render(username=user.user_name, classtype=user.class_type)
 
 
 class IradsManager(object):
 
     @cherrypy.expose
     def index(self):
+        global user
         template = lookup.get_template('manager/manager.mako')
-        return template.render()
+        return template.render(username=user.user_name, classtype=user.class_type)
 
 
 class IradsReport(object):
 
     @cherrypy.expose
     def index(self):
+        global user
         template = lookup.get_template('report/report.mako')
-        return template.render()
+        return template.render(username=user.user_name, classtype=user.class_type)
 
 
 class IradsSearch(object):
 
     @cherrypy.expose
     def index(self):
+        global user
         template = lookup.get_template('search/search.mako')
-        return template.render()
+        return template.render(username=user.user_name, classtype=user.class_type)
 
 
 class IradsUpload(object):
 
     @cherrypy.expose
     def index(self):
+        global user
         template = lookup.get_template('upload/upload.mako')
-        return template.render()
+        return template.render(username=user.user_name, classtype=user.class_type)
 
 
 def main():
