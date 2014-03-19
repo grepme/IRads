@@ -9,3 +9,4 @@ Provide a standalone radiology system of information that suits the CMPUT 391 re
 ## Tools Used
 * Cherrypy (http://cherrypy.org)
 * SQLAlchemy (http://sqlalchemy.org)
+* Mako Templates (http://makotemplates.org)
