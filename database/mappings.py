@@ -5,7 +5,7 @@ This will initialize the tables like so.
 users(user_name,password,class,person_id,date_registered)
 persons(person_id,first_name,last_name,address,email,phone)
 family_doctor(doctor_id,patient_id)
-radiology_record(record_id,patient_id,doctor_id,radiologist_id,test_type,prescribing_date,test_date,diagnosis, description)‰
+radiology_record(record_id,patient_id,doctor_id,radiologist_id,test_type,prescribing_date,test_date,diagnosis, description)
 pacs_images(record_id,image_id,thumbnail,regular_size,full_size)
 '''
 

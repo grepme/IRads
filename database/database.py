@@ -1,6 +1,7 @@
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.orm import scoped_session
+from mappings import Base
 
 
 class Database():
@@ -23,7 +24,10 @@ class Database():
 
         # Thread local storage of each session
         Database.session = scoped_session(session_factory)
-
+		
+        #Create the tables
+        Base.metadata.create_all(bind=engine)
+		
         print "done."
 
     def get(self):
