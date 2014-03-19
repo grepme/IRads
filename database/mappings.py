@@ -39,8 +39,8 @@ on his/her role in the log-in
 class Users(Base):
     __tablename__ = "users"
 
-    id = Column(Integer, primary_key=True)
-    user_name = Column(String(24))
+    id = Column(Integer)
+    user_name = Column(String(24), primary_key=True)
     password = Column(String(24))
     date_registered = Column(Date)
     person_id = Column(Integer, ForeignKey("persons.person_id"))
