@@ -24,10 +24,10 @@ class Database():
 
         # Thread local storage of each session
         Database.session = scoped_session(session_factory)
-		
-        #Create the tables
-        Base.metadata.create_all(bind=engine)
-		
+
+        # Create the tables
+        Base.metadata.create_all(bind=Database.db)
+
         print "done."
 
     def get(self):
