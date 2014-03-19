@@ -48,9 +48,9 @@ class Users(Base):
     # Check constraint not supported in MySQL
     class_type = Column(String(1), name="class")
 
-    #Relationships
-	person = relationship("Persons", backref="users")
-	
+    # Relationships
+        person = relationship("Persons", backref="users")
+
 # To indicate who is whose family doctor
 
 
@@ -62,15 +62,14 @@ class FamilyDoctor(Base):
     patient_id = Column(Integer,
                         ForeignKey('persons.person_id'), primary_key=True)
 
-	#Relationships
-	doctor = Relationship("Persons", foreign_keys=[doctor_id], backref="caresFor")
-	patient = Relationship("Persons", foreign_keys=[patient_id], backref="patient")
-	
-						
-						
+        # Relationships
+        doctor = Relationship("Persons",
+                              foreign_keys=[doctor_id], backref="caresFor")
+        patient = Relationship("Persons",
+                               foreign_keys=[patient_id], backref="patient")
+
+
 # To store the radiology record
-
-
 class RadiologyRecord(Base):
     __tablename__ = "radiology_record"
 
@@ -83,11 +82,14 @@ class RadiologyRecord(Base):
     test_date = Column(Date)
     diagnosis = Column(String(128))
     description = Column(String(1024))
-	
-	#Relationships
-	doctor = Relationship("Persons", foreign_keys=[doctor_id], backref="radiologyrecords_doctor")
-	patient = Relationship("Persons", foreign_keys=[patient_id], backref="radiologyrecords")
-	radiologist = Relationship("Persons", foreign_keys=[radiologist_id], backref="radiologyrecords_radiologist")
+
+        # Relationships
+        doctor = Relationship("Persons",
+                              foreign_keys=[doctor_id], backref="radiologyrecords_doctor")
+        patient = Relationship("Persons",
+                               foreign_keys=[patient_id], backref="radiologyrecords")
+        radiologist = Relationship("Persons",
+                                   foreign_keys=[radiologist_id], backref="radiologyrecords_radiologist")
 
 # To store the pacs images
 
@@ -101,7 +103,6 @@ class PacsImages(Base):
     thumbnail = Column(LargeBinary)
     regular_size = Column(LargeBinary)
     full_size = Column(LargeBinary)
-	
-	#Relationships
-	doctor = Relationship("RadiologyRecord", backref="pacsimage")
-	
+
+        # Relationships
+        doctor = Relationship("RadiologyRecord", backref="pacsimage")
