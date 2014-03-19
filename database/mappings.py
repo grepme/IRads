@@ -96,7 +96,7 @@ class PacsImages(Base):
     __tablename__ = "pacs_images"
 
     record_id = Column(Integer,
-                       ForeignKey('radiology_record.record_id') primary_key=True)
+                       ForeignKey('radiology_record.record_id'), primary_key=True)
     image_id = Column(Integer, primary_key=True)
     thumbnail = Column(LargeBinary)
     regular_size = Column(LargeBinary)
