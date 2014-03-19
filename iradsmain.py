@@ -14,9 +14,9 @@ user = None
 class Irads(object):
 
     @cherrypy.expose
-    def index(self):
+    def index(self, status=0):
         template = lookup.get_template('login.mako')
-        return template.render(loginFailed=0)
+        return template.render(loginStatus=status)
 
     @cherrypy.expose
     def checkLogin(self, username=None, password=None):
@@ -27,19 +27,25 @@ class Irads(object):
             Users.user_name == username).filter(Users.password == password)
         try:
             user = query.one()
-            raise cherrypy.HTTPRedirect("/home")
+            return self.home()
         except NoResultFound:
             template = lookup.get_template('login.mako')
-            return template.render(loginFailed=1)
+            return template.render(loginStatus=1)
         except MultipleResultsFound:
             template = lookup.get_template('login.mako')
-            return template.render(loginFailed=1)
+            return template.render(loginStatus=1)
 
     @cherrypy.expose
     def home(self):
         global user
         template = lookup.get_template('home.mako')
         return template.render(username=user.user_name, classtype=user.class_type)
+
+    @cherrypy.expose
+    def logout(self):
+        global user
+        user = None
+        return self.index(2)
 
 
 class IradsAnalysis(object):

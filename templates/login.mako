@@ -12,8 +12,10 @@
         <input type="password" name="password" class="form-control" placeholder="Password" maxlength="24" required>
         <button class="btn btn-lg btn-primary btn-block" type="submit">Sign in</button>
       </form>
-      % if loginFailed==1:
+      % if loginStatus==1:
 	<p class="lead">Invalid login! Please try again.</p>
+	  % elif loginStatus==2:
+	<p class="lead">You have been logged out.</p>
 	  % endif
     </div>
 
