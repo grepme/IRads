@@ -2,16 +2,13 @@ import cherrypy
 
 
 def protect(groups=None, redirect=True):
-    results = getAllUserData(cherrypy.session.get('session_id'))
-    if results:
-        if results['username'] != cherrypy.session.get('username'):
-            cherrypy.session.delete()
-            cherrypy.session['redirect'] = cherrypy.request.path_info
-            raise cherrypy.HTTPRedirect("/")
+    username = cherrypy.session.get('username')
+    classtype = cherrypy.session.get('classtype')
+    if username:
         if groups:
             allowed = False
             for x in groups:
-                if results['group'] == x:
+                if classtype == x:
                     allowed = True
             if not allowed:
                 raise cherrypy.HTTPError(

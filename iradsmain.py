@@ -9,7 +9,9 @@ from sqlalchemy.orm.exc import NoResultFound, MultipleResultsFound
 
 database = None
 lookup = TemplateLookup(directories=['templates'])
-user = None
+
+def getUserInfo():
+    return (cherrypy.session.get('username'), cherrypy.session.get('classtype'))
 
 class Irads(object):
 
@@ -21,13 +23,13 @@ class Irads(object):
     @cherrypy.expose
     def checkLogin(self, username=None, password=None):
         global database
-        global user
         session = database.get()
         query = session.query(Users).filter(
             Users.user_name == username).filter(Users.password == password)
         try:
-            user = query.one()
-            return self.home()
+            cherrypy.session['username'] = query.one().user_name
+            cherrypy.session['classtype'] = query.one().class_type
+            raise cherrypy.HTTPRedirect("/home")
         except NoResultFound:
             template = lookup.get_template('login.mako')
             return template.render(loginStatus=1)
@@ -36,61 +38,66 @@ class Irads(object):
             return template.render(loginStatus=1)
 
     @cherrypy.expose
+    @cherrypy.tools.protect(groups=['a', 'd', 'p', 'r'])
     def home(self):
-        global user
         template = lookup.get_template('home.mako')
-        return template.render(username=user.user_name, classtype=user.class_type)
+        (u, c) = getUserInfo()
+        return template.render(username=u, classtype=c)
 
     @cherrypy.expose
     def logout(self):
-        global user
-        user = None
+        cherrypy.session.delete()
         return self.index(2)
 
 
 class IradsAnalysis(object):
 
     @cherrypy.expose
+    @cherrypy.tools.protect(groups=['a'])
     def index(self):
-        global user
         template = lookup.get_template('analysis/analysis.mako')
-        return template.render(username=user.user_name, classtype=user.class_type)
+        (u, c) = getUserInfo()
+        return template.render(username=u, classtype=c)
 
 
 class IradsManager(object):
 
     @cherrypy.expose
+    @cherrypy.tools.protect(groups=['a'])
     def index(self):
-        global user
         template = lookup.get_template('manager/manager.mako')
-        return template.render(username=user.user_name, classtype=user.class_type)
+        (u, c) = getUserInfo()
+        return template.render(username=u, classtype=c)
 
 
 class IradsReport(object):
 
     @cherrypy.expose
+    @cherrypy.tools.protect(groups=['a'])
     def index(self):
-        global user
         template = lookup.get_template('report/report.mako')
-        return template.render(username=user.user_name, classtype=user.class_type)
+        (u, c) = getUserInfo()
+        return template.render(username=u, classtype=c)
 
 
 class IradsSearch(object):
 
     @cherrypy.expose
+    @cherrypy.tools.protect(groups=['a', 'd', 'p', 'r'])
     def index(self):
-        global user
         template = lookup.get_template('search/search.mako')
-        return template.render(username=user.user_name, classtype=user.class_type)
+        (u, c) = getUserInfo()
+        return template.render(username=u, classtype=c)
 
 
 class IradsUpload(object):
 
     @cherrypy.expose
+    @cherrypy.tools.protect(groups=['r'])
     def index(self):
-        global user
         template = lookup.get_template('upload/upload.mako')
-        return template.render(username=user.user_name, classtype=user.class_type)
+        (u, c) = getUserInfo()
+        return template.render(username=u, classtype=c)
 
 
 def main():
@@ -119,7 +126,6 @@ def main():
 
     cherrypy.config.update({'server.socket_host': '0.0.0.0',
                             'server.socket_port': 27848})
-
     # Plug it into the quickstart with the default config.
     cherrypy.quickstart(Mapping, '/', config=config)
 

@@ -9,6 +9,7 @@
               class="active"
             % endif  
             ><a href="/home">Home</a></li>
+            % if classtype == 'a':
             <li
             % if currentPage == 'manager':
               class="active"
@@ -24,6 +25,14 @@
               class="active"
             % endif
              ><a href="/analysis">Data Analysis</a></li>
+            % endif
+            % if classtype == 'r':
+            <li
+            % if currentPage == 'upload':
+              class="active"
+            % endif
+             ><a href="/upload">Upload Record</a></li>
+            % endif
             <li
             % if currentPage == 'search':
               class="active"
