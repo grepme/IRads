@@ -87,7 +87,7 @@ class IradsManager(object):
     @cherrypy.expose
     @cherrypy.tools.protect(groups=['a'])
     def addPerson(self, firstname=None, lastname=None, address=None, email=None, phone=None):
-        template = lookup.get_template('manager/adduser.mako')
+        template = lookup.get_template('manager/addperson.mako')
         (u, c) = getUserInfo()
         if firstname:
             session = database.get()
@@ -99,6 +99,17 @@ class IradsManager(object):
             return template.render(username=u, classtype=c, action=True)
         else:
             return template.render(username=u, classtype=c, action=None)
+
+    @cherrypy.expose
+    @cherrypy.tools.protect(groups=['a'])
+    def listPerson(self):
+        template = lookup.get_template('manager/listperson.mako')
+        (u, c) = getUserInfo()
+        session = database.get()
+        persons = []
+        for entry in session.query(Persons).order_by(Persons.person_id).all():
+            persons.append(entry.__dict__)
+        return template.render(username=u, classtype=c, persons=persons)
 
 
 class IradsReport(object):
