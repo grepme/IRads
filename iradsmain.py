@@ -69,7 +69,7 @@ class Irads(object):
             else:
                 fail = True
         if firstname or lastname or address or email or phone or password:
-            if fail==False:
+            if not fail:
                 session.commit()
         oldinfo = []
         oldinfo.append(user.person.first_name)
