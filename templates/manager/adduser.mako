@@ -16,7 +16,7 @@
 
       <h2>User Module <small>Add a user:</small></h2>
 
-      <form role="form" class="form-add" action="addUser" method="POST">
+      <form role="form" class="form-add" action="/manager/addUser/${preset}" method="POST">
         <div class="form-group">
           <label for="username">Username</label>
           <input type="username" class="form-control" name="username" maxlength="24" placeholder="Enter username (max 24 characters)" required autofocus>
@@ -47,8 +47,10 @@
           </select>
         </div>
         <button class="btn btn-lg btn-primary btn-block btn-add" type="submit">Add</button>
-          % if action:
+          % if action == "success":
       <p class="lead">User successfully added.</p>
+          % elif action == "exists":
+      <p class="lead">Error: this username already exists.</p>
           % endif
     </form>
     </div>

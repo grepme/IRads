@@ -6,6 +6,7 @@ from helpers import *
 from mako.lookup import TemplateLookup
 from database.database import Database
 from database.mappings import *
+from sqlalchemy.exc import IntegrityError
 from sqlalchemy.orm.exc import NoResultFound, MultipleResultsFound
 
 database = None
@@ -186,15 +187,20 @@ class IradsManager(object):
             persons.append(
                 [entry.person_id, entry.first_name, entry.last_name])
         if username:
-            date = time.strftime("%Y-%m-%d")
-            user = User(user_name=username, password=password,
-                        class_type=classtype, person_id=id,
-                        date_registered=date)
-            session.add(user)
-            session.commit()
-            return template.render(
-                username=u, classtype=c, persons=persons,
-                preset=int(preset), action=True)
+            try:
+                date = time.strftime("%Y-%m-%d")
+                user = User(user_name=username, password=password,
+                            class_type=classtype, person_id=id,
+                            date_registered=date)
+                session.add(user)
+                session.commit()
+                return template.render(
+                    username=u, classtype=c, persons=persons,
+                    preset=int(preset), action="success")
+            except IntegrityError:
+                return template.render(
+                    username=u, classtype=c, persons=persons,
+                    preset=int(preset), action="exists")
         else:
             return template.render(
                 username=u, classtype=c, persons=persons, preset=int(preset))
@@ -247,6 +253,19 @@ class IradsManager(object):
         for entry in session.query(User).order_by(User.user_name).all():
             users.append(entry.__dict__)
         return template.render(username=u, classtype=c, users=users)
+
+    @cherrypy.expose
+    @cherrypy.tools.protect(groups=['a'])
+    def listDoctor(self):
+        template = lookup.get_template('manager/listdoctor.mako')
+        (u, c) = getUserInfo()
+        session = database.get()
+        doctors = []
+        for entry in session.query(
+                User).filter(User.class_type == 'd').all():
+            if entry.person.__dict__ not in doctors:
+                doctors.append(entry.person.__dict__)
+        return template.render(username=u, classtype=c, doctors=doctors)
 
 
 class IradsReport(object):
