@@ -1,7 +1,7 @@
 <%include file="header.mako" args="pageTitle='Change Password'" />
 
   <link href="css/main.css" rel="stylesheet">
-  <link href="css/login.css" rel="stylesheet">
+  <link href="css/user.css" rel="stylesheet">
 
     <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
     <!--[if lt IE 9]>
@@ -16,7 +16,7 @@
 
     <div class="container">
     <form class="form-signin" role="form" action="user" method="POST">
-        <h2 class="form-signin-heading">Change passsword</h2>
+        <h2 class="form-signin-heading">Change password</h2>
         <label for="password">Password</label>
         <input type="password" name="password" class="form-control" placeholder="New password" maxlength="24" required autofocus>
         <button class="btn btn-lg btn-primary btn-block" type="submit">Change</button>
