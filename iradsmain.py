@@ -51,24 +51,26 @@ class Irads(object):
         (u, c) = getUserInfo()
         session = database.get()
         user = session.query(User).filter(User.user_name == u).one()
-        if firstname:
-            user.person.first_name = firstname
-        if lastname:
-            user.person.last_name = lastname
-        if address:
-            user.person.address = address
-        if email:
-            user.person.email = email
-        if phone:
-            user.person.phone = phone
+        fail = False
         if password or password2:
             if password == password2:
                 user.password = password
             else:
                 fail = True
+        if firstname and not fail:
+            user.person.first_name = firstname
+        if lastname and not fail:
+            user.person.last_name = lastname
+        if address and not fail:
+            user.person.address = address
+        if email and not fail:
+            user.person.email = email
+        if phone and not fail:
+            user.person.phone = phone
         if firstname or lastname or address or email or phone or password:
             if not fail:
                 session.commit()
+                user = session.query(User).filter(User.user_name == u).one()
         oldinfo = []
         oldinfo.append(user.person.first_name)
         oldinfo.append(user.person.last_name)
@@ -174,17 +176,6 @@ class IradsManager(object):
 
     @cherrypy.expose
     @cherrypy.tools.protect(groups=['a'])
-    def listUser(self):
-        template = lookup.get_template('manager/listuser.mako')
-        (u, c) = getUserInfo()
-        session = database.get()
-        users = []
-        for entry in session.query(User).order_by(User.user_name).all():
-            users.append(entry.__dict__)
-        return template.render(username=u, classtype=c, users=users)
-
-    @cherrypy.expose
-    @cherrypy.tools.protect(groups=['a'])
     def addUser(self, preset, username=None,
                 password=None, classtype=None, id=None):
         template = lookup.get_template('manager/adduser.mako')
@@ -207,6 +198,55 @@ class IradsManager(object):
         else:
             return template.render(
                 username=u, classtype=c, persons=persons, preset=int(preset))
+
+    @cherrypy.expose
+    @cherrypy.tools.protect(groups=['a'])
+    def editUser(self, userToEdit, username=None, password=None,
+                 password2=None, classtype=None):
+        template = lookup.get_template('manager/edituser.mako')
+        (u, c) = getUserInfo()
+        session = database.get()
+        user = session.query(User).filter(User.user_name == userToEdit).one()
+        fail = False
+        if password or password2:
+            if password == password2:
+                user.password = password
+            else:
+                fail = True
+        if username and not fail:
+            user.user_name = username
+        if classtype and not fail:
+            user.class_type = classtype
+        if username or password or classtype:
+            if not fail:
+                session.commit()
+        if username or password or classtype:
+            if username and not fail:
+                user = session.query(User).filter(
+                    User.user_name == username).one()
+            else:
+                user = session.query(User).filter(
+                    User.user_name == userToEdit).one()
+            if fail:
+                return template.render(username=u, classtype=c,
+                                       user=user.__dict__, action="nomatch")
+            else:
+                return template.render(username=u, classtype=c,
+                                       user=user.__dict__, action="success")
+        else:
+            return template.render(
+                username=u, classtype=c, user=user.__dict__)
+
+    @cherrypy.expose
+    @cherrypy.tools.protect(groups=['a'])
+    def listUser(self):
+        template = lookup.get_template('manager/listuser.mako')
+        (u, c) = getUserInfo()
+        session = database.get()
+        users = []
+        for entry in session.query(User).order_by(User.user_name).all():
+            users.append(entry.__dict__)
+        return template.render(username=u, classtype=c, users=users)
 
 
 class IradsReport(object):

@@ -26,17 +26,17 @@
       <tbody>
       % for user in users:
       <tr>
-        <td><a href="/manager/editUser/${user['person_id']}">${user['user_name']}</a></td>
+        <td><a href="/manager/editUser/${user['user_name']}">${user['user_name']}</a></td>
         % if user['class_type'] == 'a':
-        <td><a href="/manager/editUser/${user['person_id']}">Administrator</a></td>
+        <td><a href="/manager/editUser/${user['user_name']}">Administrator</a></td>
         % elif user['class_type'] == 'd':
-        <td><a href="/manager/editUser/${user['person_id']}">Doctor</a></td>
+        <td><a href="/manager/editUser/${user['user_name']}">Doctor</a></td>
         % elif user['class_type'] == 'p':
-        <td><a href="/manager/editUser/${user['person_id']}">Patient</a></td>
+        <td><a href="/manager/editUser/${user['user_name']}">Patient</a></td>
         % elif user['class_type'] == 'r':
-        <td><a href="/manager/editUser/${user['person_id']}">Radiologist</a></td>
+        <td><a href="/manager/editUser/${user['user_name']}">Radiologist</a></td>
         % endif
-        <td><a href="/manager/editUser/${user['person_id']}">${user['date_registered']}</a></td>
+        <td><a href="/manager/editUser/${user['user_name']}">${user['date_registered']}</a></td>
       </tr>
       % endfor
       </tbody>
