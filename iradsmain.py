@@ -103,12 +103,34 @@ class IradsUpload(object):
 
     @cherrypy.expose
     @cherrypy.tools.protect(groups=['r'])
+    def selectRecord(self):
+        global database
+        template = lookup.get_template('upload/upload.mako')
+        (u, c) = getUserInfo()
+        session = database.get()
+        user = session.query(Users).filter(Users.user_name == u).one()
+        person = session.query(Persons).filter(Persons.person_id == user.person_id).one()
+        records = person.radiologyrecords_radiologist
+        record = []
+        for r in records:
+            record.append([r.record_id, r.prescribing_date, r.test_date, r.diagnosis, r.description])
+        return template.render(username=u, classtype=c, action="selectRecord", records=record)
+
+    @cherrypy.expose
+    @cherrypy.tools.protect(groups=['r'])
     def addRecord(self):
         template = lookup.get_template('upload/upload.mako')
         (u, c) = getUserInfo()
         p = [["1", "Test"], ["2", "Test"]]
         d = [["1", "Test"], ["2", "Test"]]
         return template.render(username=u, classtype=c, action="addRecord", patients=p, doctors=d)
+
+    @cherrypy.expose
+    @cherrypy.tools.protect(groups=['r'])
+    def upload(self, id):
+        template = lookup.get_template('upload/upload.mako')
+        (u, c) = getUserInfo()
+        return template.render(username=u, classtype=c, action="selectImage")
 
 
 def main():

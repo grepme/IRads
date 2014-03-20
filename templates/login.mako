@@ -1,6 +1,6 @@
-<%include file="header.mako" args="pageTitle='Login'" />
+<%include file="/header.mako" args="pageTitle='Login'" />
 
-<link href="css/login.css" rel="stylesheet">
+<link href="/css/login.css" rel="stylesheet">
 </head>
  <body>
 
@@ -19,4 +19,4 @@
 	  % endif
     </div>
 
-<%include file="footer.mako"/>
+<%include file="/footer.mako"/>
