@@ -18,26 +18,25 @@ def getUserInfo():
 class Irads(object):
 
     @cherrypy.expose
-    def index(self, status=0):
-        template = lookup.get_template('login.mako')
-        return template.render(loginStatus=status)
-
-    @cherrypy.expose
-    def checkLogin(self, username=None, password=None):
+    def index(self, status=0, username=None, password=None):
         global database
-        session = database.get()
-        query = session.query(Users).filter(
-            Users.user_name == username).filter(Users.password == password)
-        try:
-            cherrypy.session['username'] = query.one().user_name
-            cherrypy.session['classtype'] = query.one().class_type
-            raise cherrypy.HTTPRedirect("/home")
-        except NoResultFound:
-            template = lookup.get_template('login.mako')
-            return template.render(loginStatus=1)
-        except MultipleResultsFound:
-            template = lookup.get_template('login.mako')
-            return template.render(loginStatus=1)
+        template = lookup.get_template('login.mako')
+        if username and password:
+            session = database.get()
+            query = session.query(Users).filter(
+                Users.user_name == username).filter(Users.password == password)
+            try:
+                cherrypy.session['username'] = query.one().user_name
+                cherrypy.session['classtype'] = query.one().class_type
+                raise cherrypy.HTTPRedirect("/home")
+            except NoResultFound:
+                template = lookup.get_template('login.mako')
+                return template.render(loginStatus=1)
+            except MultipleResultsFound:
+                template = lookup.get_template('login.mako')
+                return template.render(loginStatus=1)
+        else:
+            return template.render(loginStatus=status)
 
     @cherrypy.expose
     @cherrypy.tools.protect(groups=['a', 'd', 'p', 'r'])
@@ -123,11 +122,13 @@ class IradsUpload(object):
         (u, c) = getUserInfo()
         session = database.get()
         user = session.query(Users).filter(Users.user_name == u).one()
-        person = session.query(Persons).filter(Persons.person_id == user.person_id).one()
+        person = session.query(Persons).filter(
+            Persons.person_id == user.person_id).one()
         records = person.radiologyrecords_radiologist
         record = []
         for r in records:
-            record.append([r.record_id, r.prescribing_date, r.test_date, r.diagnosis, r.description])
+            record.append(
+                [r.record_id, r.prescribing_date, r.test_date, r.diagnosis, r.description])
         return template.render(username=u, classtype=c, action="selectRecord", records=record)
 
     @cherrypy.expose

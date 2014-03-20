@@ -6,7 +6,7 @@
 
     <div class="container">
 	 
-      <form class="form-signin" role="form" action="checkLogin" method="POST">
+      <form class="form-signin" role="form" action="/" method="POST">
         <h2 class="form-signin-heading">IRads: Please sign in</h2>
         <input type="username" name="username" class="form-control" placeholder="Username" maxlength="24" required autofocus>
         <input type="password" name="password" class="form-control" placeholder="Password" maxlength="24" required>
