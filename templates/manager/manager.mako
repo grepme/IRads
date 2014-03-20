@@ -1,5 +1,5 @@
-<%include file="../header.mako" args="pageTitle='User Manager'" />
-  <link href="../css/main.css" rel="stylesheet">
+<%include file="/header.mako" args="pageTitle='User Manager'" />
+  <link href="/css/main.css" rel="stylesheet">
 
     <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
     <!--[if lt IE 9]>
@@ -10,7 +10,7 @@
 
   <body>
 
-    <%include file="../navbars/navbar.mako" args="currentPage='manager'"/>
+    <%include file="/navbars/navbar.mako" args="currentPage='manager'"/>
 
     <div class="container">
 
@@ -47,4 +47,4 @@
 
     </div>
 
-<%include file="../footer.mako"/>
+<%include file="/footer.mako"/>

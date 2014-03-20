@@ -14,7 +14,7 @@
     <div class="container">
     % if action == 'selectImage':
     <h2>Uploading Module <small>Upload an image:</small></h2>
-      <form class="form-upload" role="form">
+      <form class="form-upload" role="form" action="postImage" method="POST">
         <h2 class="form-upload-heading">Choose a file:</h2>
         <input type="file" id="radiologyimage">
         <p class="help-block">Choose a .jpg file to upload.</p>
