@@ -2,3 +2,4 @@
 *.sublime-workspace
 sftp-config.json
 *.pyc
+config.py
