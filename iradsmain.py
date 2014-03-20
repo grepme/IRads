@@ -10,8 +10,10 @@ from sqlalchemy.orm.exc import NoResultFound, MultipleResultsFound
 database = None
 lookup = TemplateLookup(directories=['templates'])
 
+
 def getUserInfo():
     return (cherrypy.session.get('username'), cherrypy.session.get('classtype'))
+
 
 class Irads(object):
 
@@ -97,7 +99,16 @@ class IradsUpload(object):
     def index(self):
         template = lookup.get_template('upload/upload.mako')
         (u, c) = getUserInfo()
-        return template.render(username=u, classtype=c)
+        return template.render(username=u, classtype=c, action="none")
+
+    @cherrypy.expose
+    @cherrypy.tools.protect(groups=['r'])
+    def addRecord(self):
+        template = lookup.get_template('upload/upload.mako')
+        (u, c) = getUserInfo()
+        p = [["1", "Test"], ["2", "Test"]]
+        d = [["1", "Test"], ["2", "Test"]]
+        return template.render(username=u, classtype=c, action="addRecord", patients=p, doctors=d)
 
 
 def main():

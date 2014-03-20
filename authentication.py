@@ -12,7 +12,7 @@ def protect(groups=None, redirect=True):
                     allowed = True
             if not allowed:
                 raise cherrypy.HTTPError(
-                    "403 Forbidden", "You are not allowed to access this resource.")
+                    403, "You are not allowed to access this resource.")
     else:
         cherrypy.session.delete()
         cherrypy.session['redirect'] = cherrypy.request.path_info
