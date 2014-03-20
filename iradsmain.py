@@ -47,6 +47,20 @@ class Irads(object):
         return template.render(username=u, classtype=c)
 
     @cherrypy.expose
+    @cherrypy.tools.protect(groups=['a', 'd', 'p', 'r'])
+    def user(self, password=None):
+        template = lookup.get_template('user.mako')
+        (u, c) = getUserInfo()
+        if password:
+            session = database.get()
+            user = session.query(Users).filter(Users.user_name == u).one()
+            user.password = password
+            session.commit()
+            return template.render(username=u, classtype=c, action=True)
+        else:
+            return template.render(username=u, classtype=c)
+
+    @cherrypy.expose
     def logout(self):
         cherrypy.session.delete()
         return self.index(2)

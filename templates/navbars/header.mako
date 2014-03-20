@@ -6,5 +6,5 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </button>
-          <a class="navbar-brand" href="#">IRADS</a>
+          <a class="navbar-brand" href="/home">IRADS</a>
         </div>

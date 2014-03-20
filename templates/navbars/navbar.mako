@@ -40,8 +40,12 @@
              ><a href="/search">Search</a></li>
           </ul>
           <ul class="nav navbar-nav navbar-right">
-            <li><a href="#">Logged in as: ${username}</a></li>
-            <li><a href="/user">Change Password</a></li>
+            <li><a href="/user">Logged in as: ${username}</a></li>
+            <li 
+            % if currentPage == 'user':
+              class="active"
+            % endif
+            ><a href="/user">Change Password</a></li>
             <li><a href="/logout">Logout</a></li>
           </ul>
         </div><!--/.nav-collapse -->
