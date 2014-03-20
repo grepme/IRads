@@ -50,7 +50,7 @@ class User(Base):
     class_type = Column(String(1), name="class")
 
     # Relationships
-    person = relationship("Persons", backref="users")
+    person = relationship("Person", backref="users")
 
 
 # To indicate who is whose family doctor
@@ -63,9 +63,9 @@ class FamilyDoctor(Base):
                         ForeignKey('persons.person_id'), primary_key=True)
 
     # Relationships
-    doctor = relationship("Persons",
+    doctor = relationship("Person",
                           foreign_keys=[doctor_id], backref="caresFor")
-    patient = relationship("Persons",
+    patient = relationship("Person",
                            foreign_keys=[patient_id], backref="patient")
 
 
@@ -84,13 +84,13 @@ class RadiologyRecord(Base):
     description = Column(String(1024))
 
     # Relationships
-    doctor = relationship("Persons",
+    doctor = relationship("Person",
                           foreign_keys=[doctor_id],
                           backref="radiologyrecords_doctor")
-    patient = relationship("Persons",
+    patient = relationship("Person",
                            foreign_keys=[patient_id],
                            backref="radiologyrecords")
-    radiologist = relationship("Persons",
+    radiologist = relationship("Person",
                                foreign_keys=[radiologist_id],
                                backref="radiologyrecords_radiologist")
 

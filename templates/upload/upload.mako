@@ -1,5 +1,5 @@
 <%include file="/header.mako" args="pageTitle='Upload'" />
-  <link href="/css/upload.css" rel="stylesheet">
+  <link href="/css/main.css" rel="stylesheet">
 
     <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
     <!--[if lt IE 9]>
@@ -11,7 +11,7 @@
   <body>
 
     <%include file="/navbars/navbar.mako" args="currentPage='upload'"/>
-    <div class="container">
+    <div class="container content">
     % if action == 'selectImage':
     <h2>Uploading Module <small>Upload an image:</small></h2>
       <form class="form-upload" role="form" action="postImage" method="POST">

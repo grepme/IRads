@@ -12,7 +12,7 @@
 
     <%include file="/navbars/navbar.mako" args="currentPage='manager'"/>
 
-    <div class="container">
+    <div class="container content">
 
       <h2>User Module <small>Select an action:</small></h2>
       <p><a href="/manager/addPerson">Add a person</a></p>

@@ -1,5 +1,5 @@
 <%include file="/header.mako" args="pageTitle='User Manager'" />
-  <link href="/css/adduser.css" rel="stylesheet">
+  <link href="/css/main.css" rel="stylesheet">
 
     <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
     <!--[if lt IE 9]>
@@ -12,7 +12,7 @@
 
     <%include file="/navbars/navbar.mako" args="currentPage='manager'"/>
 
-    <div class="container">
+    <div class="container content">
 
     <h2>User Module <small>Select a person:</small></h2>
     <table class="table table-striped table-bordered table-hover">
