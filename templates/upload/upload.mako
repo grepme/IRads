@@ -87,8 +87,8 @@
       </form>
     % else:
     <h2>Uploading Module <small>Select an action:</small></h2>
-    <p><a href="/upload/addRecord">Add a new record</a></p>
-    <p><a href="/upload/selectRecord">Add images to an existing record</a></p>
+    <h5><a href="/upload/addRecord">Add a new record</a></h5>
+    <h5><a href="/upload/selectRecord">Add images to an existing record</a></h5>
     % endif
     </div>
     </div>

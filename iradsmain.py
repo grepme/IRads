@@ -132,7 +132,7 @@ class IradsManager(object):
             session.commit()
             return template.render(username=u, classtype=c, action=True)
         else:
-            return template.render(username=u, classtype=c, action=None)
+            return template.render(username=u, classtype=c)
 
     @cherrypy.expose
     @cherrypy.tools.protect(groups=['a'])
@@ -171,6 +171,17 @@ class IradsManager(object):
         for entry in session.query(Person).order_by(Person.last_name).all():
             persons.append(entry.__dict__)
         return template.render(username=u, classtype=c, persons=persons)
+
+    @cherrypy.expose
+    @cherrypy.tools.protect(groups=['a'])
+    def listUser(self):
+        template = lookup.get_template('manager/listuser.mako')
+        (u, c) = getUserInfo()
+        session = database.get()
+        users = []
+        for entry in session.query(User).order_by(User.user_name).all():
+            users.append(entry.__dict__)
+        return template.render(username=u, classtype=c, users=users)
 
     @cherrypy.expose
     @cherrypy.tools.protect(groups=['a'])
@@ -225,7 +236,7 @@ class IradsUpload(object):
     def index(self):
         template = lookup.get_template('upload/upload.mako')
         (u, c) = getUserInfo()
-        return template.render(username=u, classtype=c, action="none")
+        return template.render(username=u, classtype=c)
 
     @cherrypy.expose
     @cherrypy.tools.protect(groups=['r'])
