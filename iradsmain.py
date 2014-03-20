@@ -84,6 +84,22 @@ class IradsManager(object):
         (u, c) = getUserInfo()
         return template.render(username=u, classtype=c)
 
+    @cherrypy.expose
+    @cherrypy.tools.protect(groups=['a'])
+    def addPerson(self, firstname=None, lastname=None, address=None, email=None, phone=None):
+        template = lookup.get_template('manager/adduser.mako')
+        (u, c) = getUserInfo()
+        if firstname:
+            session = database.get()
+            person = Persons(
+                first_name=firstname, last_name=lastname,
+                address=address, email=email, phone=phone)
+            session.add(person)
+            session.commit()
+            return template.render(username=u, classtype=c, action=True)
+        else:
+            return template.render(username=u, classtype=c, action=None)
+
 
 class IradsReport(object):
 

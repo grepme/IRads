@@ -1,0 +1,11 @@
+body {
+  min-height: 2000px;
+  padding-top: 70px;
+  padding-bottom: 40px;
+}
+
+.form-add {
+  padding: 15px;
+  margin: 0 auto;
+  max-width:600px;
+}
