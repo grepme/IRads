@@ -62,7 +62,7 @@ class Irads(object):
     @cherrypy.expose
     def logout(self):
         cherrypy.session.delete()
-        return self.index(2)
+        raise cherrypy.HTTPRedirect('/')
 
 
 class IradsAnalysis(object):

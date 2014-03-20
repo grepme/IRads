@@ -14,36 +14,12 @@
 
     <div class="container">
 
-      <table class="table table-striped">
-      <thead>
-        <tr>
-          <th>ID</th>
-          <th>Username</th>
-          <th>Class</th>
-          <th>Date Registered</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-          <td>1</td>
-          <td>user1</td>
-          <td>Admin</td>
-          <td>test</td>
-        </tr>
-        <tr>
-          <td>2</td>
-          <td>user2</td>
-          <td>User</td>
-          <td>test</td>
-        </tr>
-        <tr>
-          <td>3</td>
-          <td>user3</td>
-          <td>Doctor</td>
-          <td>test</td>
-        </tr>
-      </tbody>
-      </table>
+      <h2>User Module <small>Select an action:</small></h2>
+      <p><a href="/manager/addPerson">Add a person</a></p>
+      <p><a href="/manager/listPerson">View persons and edit details</a></p>
+      <p><a href="/manager/addUser">Add a username for a person</a></p>
+      <p><a href="/manager/listUser">View usernames and edit details</a></p>
+      <p><a href="/manager/listDoctor">View and edit doctors' patients</a></p>
 
     </div>
 
