@@ -1,5 +1,6 @@
 import cherrypy
 import os.path
+import time
 from authentication import *
 from config import *
 from mako.lookup import TemplateLookup
@@ -110,6 +111,26 @@ class IradsManager(object):
         for entry in session.query(Persons).order_by(Persons.person_id).all():
             persons.append(entry.__dict__)
         return template.render(username=u, classtype=c, persons=persons)
+
+    @cherrypy.expose
+    @cherrypy.tools.protect(groups=['a'])
+    def addUser(self, username=None, password=None, classtype=None, id=None):
+        template = lookup.get_template('manager/adduser.mako')
+        (u, c) = getUserInfo()
+        session = database.get()
+        persons = []
+        for entry in session.query(Persons).order_by(Persons.person_id).all():
+            persons.append(
+                [entry.person_id, entry.first_name, entry.last_name])
+        if username:
+            date = time.strftime("%Y-%m-%d")
+            user = Users(user_name=username, password=password,
+                         class_type=classtype, person_id=id, date_registered=date)
+            session.add(user)
+            session.commit()
+            return template.render(username=u, classtype=c, persons=persons, action=True)
+        else:
+            return template.render(username=u, classtype=c, persons=persons, action=None)
 
 
 class IradsReport(object):

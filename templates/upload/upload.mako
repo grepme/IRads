@@ -16,7 +16,7 @@
     <h2>Uploading Module <small>Upload an image:</small></h2>
       <form class="form-upload" role="form" action="postImage" method="POST">
         <h2 class="form-upload-heading">Choose a file:</h2>
-        <input type="file" id="radiologyimage">
+        <input type="file" name="radiologyimage">
         <p class="help-block">Choose a .jpg file to upload.</p>
         <button class="btn btn-lg btn-primary btn-block" type="submit">Upload</button>
       </form>
@@ -49,7 +49,7 @@
       <form class="form-add" role="form" action="postRecord" method="POST">
         <div class="form-group">
           <label for="patient">Patient</label>
-          <select id="patient" class="form-control">
+          <select name="patient" class="form-control">
           % for patient in patients:
             <option value="${patient[0]}">${patient[0]}. ${patient[1]}</option>
           % endfor
@@ -57,7 +57,7 @@
         </div>
         <div class="form-group">
           <label for="doctor">Doctor</label>
-          <select id="doctor" class="form-control">
+          <select name="doctor" class="form-control">
           % for doctor in doctors:
             <option value="${doctor[0]}">${doctor[0]}. ${doctor[1]}</option>
           % endfor
