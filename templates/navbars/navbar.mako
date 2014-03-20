@@ -45,7 +45,7 @@
             % if currentPage == 'user':
               class="active"
             % endif
-            ><a href="/user">Change Password</a></li>
+            ><a href="/user">Edit Details</a></li>
             <li><a href="/logout">Logout</a></li>
           </ul>
         </div><!--/.nav-collapse -->

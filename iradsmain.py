@@ -48,17 +48,35 @@ class Irads(object):
 
     @cherrypy.expose
     @cherrypy.tools.protect(groups=['a', 'd', 'p', 'r'])
-    def user(self, password=None):
+    def user(self, firstname=None, lastname=None, address=None, email=None, phone=None, password=None):
         template = lookup.get_template('user.mako')
         (u, c) = getUserInfo()
+        session = database.get()
+        user = session.query(Users).filter(Users.user_name == u).one()
+        if firstname:
+            user.person.first_name = firstname
+        if lastname:
+            user.person.last_name = lastname
+        if address:
+            user.person.address = address
+        if email:
+            user.person.email = email
+        if phone:
+            user.person.phone = phone
         if password:
-            session = database.get()
-            user = session.query(Users).filter(Users.user_name == u).one()
             user.password = password
+        if firstname or lastname or address or email or phone or password:
             session.commit()
-            return template.render(username=u, classtype=c, action=True)
+        oldinfo = []
+        oldinfo.append(user.person.first_name)
+        oldinfo.append(user.person.last_name)
+        oldinfo.append(user.person.address)
+        oldinfo.append(user.person.email)
+        oldinfo.append(user.person.phone)
+        if firstname or lastname or address or email or phone or password:
+            return template.render(username=u, classtype=c, oldinfo=oldinfo, action=True)
         else:
-            return template.render(username=u, classtype=c)
+            return template.render(username=u, classtype=c, oldinfo=oldinfo)
 
     @cherrypy.expose
     def logout(self):
@@ -108,7 +126,7 @@ class IradsManager(object):
         (u, c) = getUserInfo()
         session = database.get()
         persons = []
-        for entry in session.query(Persons).order_by(Persons.person_id).all():
+        for entry in session.query(Persons).order_by(Persons.last_name).all():
             persons.append(entry.__dict__)
         return template.render(username=u, classtype=c, persons=persons)
 
@@ -119,7 +137,7 @@ class IradsManager(object):
         (u, c) = getUserInfo()
         session = database.get()
         persons = []
-        for entry in session.query(Persons).order_by(Persons.person_id).all():
+        for entry in session.query(Persons).order_by(Persons.last_name).all():
             persons.append(
                 [entry.person_id, entry.first_name, entry.last_name])
         if username:

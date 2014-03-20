@@ -18,9 +18,8 @@
     <table class="table table-striped table-bordered table-hover">
     <thead>
         <tr>
-          <th>#</th>
-          <th>First Name</th>
           <th>Last Name</th>
+          <th>First Name</th>
           <th>Address</th>
           <th>Email</th>
           <th>Phone</th>
@@ -29,9 +28,8 @@
       <tbody>
       % for person in persons:
       <tr>
-        <td><a href="/manager/editPerson/${person['person_id']}">${person['person_id']}</a></td>
-        <td><a href="/manager/editPerson/${person['person_id']}">${person['first_name']}</a></td>
         <td><a href="/manager/editPerson/${person['person_id']}">${person['last_name']}</a></td>
+        <td><a href="/manager/editPerson/${person['person_id']}">${person['first_name']}</a></td>
         <td><a href="/manager/editPerson/${person['person_id']}">${person['address']}</a></td>
         <td><a href="/manager/editPerson/${person['person_id']}">${person['email']}</a></td>
         <td><a href="/manager/editPerson/${person['person_id']}">${person['phone']}</a></td>

@@ -38,7 +38,7 @@
           <label for="id">Username assigned to:</label>
           <select name="id" class="form-control" required>
           % for person in persons:
-            <option value="${person[0]}">${person[0]}. ${person[1]} ${person[2]}</option>
+            <option value="${person[0]}">${person[2]}, ${person[1]}</option>
           % endfor
           </select>
         </div>
