@@ -16,7 +16,9 @@
 	<p class="lead">Invalid login! Please try again.</p>
 	  % elif loginStatus==2:
 	<p class="lead">You have been logged out.</p>
-	  % endif
+    % elif loginStatus==3:
+  <p class="lead">You are not logged in.</p>
+    % endif
     </div>
 
 <%include file="/footer.mako"/>

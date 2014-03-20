@@ -40,14 +40,14 @@ class Irads(object):
             return template.render(loginStatus=status)
 
     @cherrypy.expose
-    @cherrypy.tools.protect(groups=['a', 'd', 'p', 'r'])
+    @cherrypy.tools.protect()
     def home(self):
         template = lookup.get_template('home.mako')
         (u, c) = getUserInfo()
         return template.render(username=u, classtype=c)
 
     @cherrypy.expose
-    @cherrypy.tools.protect(groups=['a', 'd', 'p', 'r'])
+    @cherrypy.tools.protect()
     def user(self, firstname=None, lastname=None, address=None, email=None, phone=None, password=None, password2=None):
         template = lookup.get_template('user.mako')
         (u, c) = getUserInfo()
@@ -88,7 +88,14 @@ class Irads(object):
     @cherrypy.expose
     def logout(self):
         cherrypy.session.delete()
-        raise cherrypy.HTTPRedirect('/')
+        template = lookup.get_template('login.mako')
+        return template.render(loginStatus=2)
+
+    @cherrypy.expose
+    def error(self):
+        cherrypy.session.delete()
+        template = lookup.get_template('login.mako')
+        return template.render(loginStatus=3)
 
 
 class IradsAnalysis(object):
@@ -171,7 +178,7 @@ class IradsReport(object):
 class IradsSearch(object):
 
     @cherrypy.expose
-    @cherrypy.tools.protect(groups=['a', 'd', 'p', 'r'])
+    @cherrypy.tools.protect()
     def index(self):
         template = lookup.get_template('search/search.mako')
         (u, c) = getUserInfo()

@@ -14,8 +14,7 @@ def protect(groups=None, redirect=True):
                 raise cherrypy.HTTPError(
                     403, "You are not allowed to access this resource.")
     else:
-        cherrypy.session.delete()
         cherrypy.session['redirect'] = cherrypy.request.path_info
-        raise cherrypy.HTTPRedirect("/")
+        raise cherrypy.HTTPRedirect("/error")
 
 cherrypy.tools.protect = cherrypy.Tool('before_handler', protect)
