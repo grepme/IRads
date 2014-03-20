@@ -48,7 +48,7 @@ class Irads(object):
 
     @cherrypy.expose
     @cherrypy.tools.protect(groups=['a', 'd', 'p', 'r'])
-    def user(self, firstname=None, lastname=None, address=None, email=None, phone=None, password=None):
+    def user(self, firstname=None, lastname=None, address=None, email=None, phone=None, password=None, password2=None):
         template = lookup.get_template('user.mako')
         (u, c) = getUserInfo()
         session = database.get()
@@ -63,10 +63,14 @@ class Irads(object):
             user.person.email = email
         if phone:
             user.person.phone = phone
-        if password:
-            user.password = password
+        if password or password2:
+            if password == password2:
+                user.password = password
+            else:
+                fail = True
         if firstname or lastname or address or email or phone or password:
-            session.commit()
+            if fail==False:
+                session.commit()
         oldinfo = []
         oldinfo.append(user.person.first_name)
         oldinfo.append(user.person.last_name)
@@ -74,7 +78,10 @@ class Irads(object):
         oldinfo.append(user.person.email)
         oldinfo.append(user.person.phone)
         if firstname or lastname or address or email or phone or password:
-            return template.render(username=u, classtype=c, oldinfo=oldinfo, action=True)
+            if fail:
+                return template.render(username=u, classtype=c, oldinfo=oldinfo, action="nomatch")
+            else:
+                return template.render(username=u, classtype=c, oldinfo=oldinfo, action="success")
         else:
             return template.render(username=u, classtype=c, oldinfo=oldinfo)
 

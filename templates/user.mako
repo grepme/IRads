@@ -42,10 +42,16 @@
         <label for="password">Password</label>
         <input type="password" name="password" class="form-control" placeholder="New password" maxlength="24">
         </div>
+        <div class="form-group">
+        <label for="password2">Repeat password</label>
+        <input type="password" name="password2" class="form-control" placeholder="New password" maxlength="24">
+        </div>
         <button class="btn btn-lg btn-primary btn-block" type="submit">Change</button>
       </form>
-      % if action:
+      % if action=="success":
     <p class="lead">Your information was changed.</p>
+      % elif action=="nomatch":
+    <p class="lead">An error occurred: Your passwords did not match.</p>  
       % endif
     </div>
 
