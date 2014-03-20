@@ -15,7 +15,7 @@ lookup = TemplateLookup(directories=['templates'])
 class Irads(object):
 
     @cherrypy.expose
-    def index(self, status=0, username=None, password=None):
+    def index(self, username=None, password=None):
         global database
         template = lookup.get_template('login.mako')
         if username and password:
@@ -33,7 +33,7 @@ class Irads(object):
                 template = lookup.get_template('login.mako')
                 return template.render(loginStatus=1)
         else:
-            return template.render(loginStatus=status)
+            return template.render(loginStatus=0)
 
     @cherrypy.expose
     @cherrypy.tools.protect()
@@ -136,6 +136,33 @@ class IradsManager(object):
 
     @cherrypy.expose
     @cherrypy.tools.protect(groups=['a'])
+    def editPerson(self, id, firstname=None, lastname=None,
+                   address=None, email=None, phone=None):
+        template = lookup.get_template('manager/editperson.mako')
+        (u, c) = getUserInfo()
+        session = database.get()
+        person = session.query(Person).filter(Person.person_id == id).one()
+        if firstname:
+            person.first_name = firstname
+        if lastname:
+            person.last_name = lastname
+        if address:
+            person.address = address
+        if email:
+            person.email = email
+        if phone:
+            person.phone = phone
+        if firstname or lastname or address or email or phone:
+            session.commit()
+            person = session.query(Person).filter(Person.person_id == id).one()
+            return template.render(
+                username=u, classtype=c, person=person.__dict__, action=True)
+        else:
+            return template.render(
+                username=u, classtype=c, person=person.__dict__)
+
+    @cherrypy.expose
+    @cherrypy.tools.protect(groups=['a'])
     def listPerson(self):
         template = lookup.get_template('manager/listperson.mako')
         (u, c) = getUserInfo()
@@ -147,7 +174,8 @@ class IradsManager(object):
 
     @cherrypy.expose
     @cherrypy.tools.protect(groups=['a'])
-    def addUser(self, username=None, password=None, classtype=None, id=None):
+    def addUser(self, preset, username=None,
+                password=None, classtype=None, id=None):
         template = lookup.get_template('manager/adduser.mako')
         (u, c) = getUserInfo()
         session = database.get()
@@ -163,10 +191,11 @@ class IradsManager(object):
             session.add(user)
             session.commit()
             return template.render(
-                username=u, classtype=c, persons=persons, action=True)
+                username=u, classtype=c, persons=persons,
+                preset=int(preset), action=True)
         else:
             return template.render(
-                username=u, classtype=c, persons=persons, action=None)
+                username=u, classtype=c, persons=persons, preset=int(preset))
 
 
 class IradsReport(object):

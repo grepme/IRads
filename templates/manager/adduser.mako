@@ -38,7 +38,11 @@
           <label for="id">Username assigned to:</label>
           <select name="id" class="form-control" required>
           % for person in persons:
+            % if person[0] == preset:
+            <option value="${person[0]}" selected>${person[2]}, ${person[1]}</option>
+            % else:
             <option value="${person[0]}">${person[2]}, ${person[1]}</option>
+            % endif
           % endfor
           </select>
         </div>

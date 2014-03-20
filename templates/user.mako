@@ -45,7 +45,7 @@
         <label for="password2">Repeat password</label>
         <input type="password" name="password2" class="form-control" placeholder="New password" maxlength="24">
         </div>
-        <button class="btn btn-lg btn-primary btn-block" type="submit">Change</button>
+        <button class="btn btn-lg btn-primary btn-block" type="submit">Edit</button>
       </form>
       % if action=="success":
     <p class="lead">Your information was changed.</p>

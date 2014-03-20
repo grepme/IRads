@@ -17,7 +17,7 @@
       <h2>User Module <small>Select an action:</small></h2>
       <p><a href="/manager/addPerson">Add a person</a></p>
       <p><a href="/manager/listPerson">View persons and edit details</a></p>
-      <p><a href="/manager/addUser">Add a username for a person</a></p>
+      <p><a href="/manager/addUser/0">Add a username for a person</a></p>
       <p><a href="/manager/listUser">View usernames and edit details</a></p>
       <p><a href="/manager/listDoctor">View and edit doctors' patients</a></p>
 
