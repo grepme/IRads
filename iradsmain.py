@@ -1,8 +1,8 @@
 import cherrypy
 import os.path
 import time
-from authentication import *
 from config import *
+from helpers import *
 from mako.lookup import TemplateLookup
 from database.database import Database
 from database.mappings import *
@@ -10,10 +10,6 @@ from sqlalchemy.orm.exc import NoResultFound, MultipleResultsFound
 
 database = None
 lookup = TemplateLookup(directories=['templates'])
-
-
-def getUserInfo():
-    return (cherrypy.session.get('username'), cherrypy.session.get('classtype'))
 
 
 class Irads(object):
@@ -24,8 +20,8 @@ class Irads(object):
         template = lookup.get_template('login.mako')
         if username and password:
             session = database.get()
-            query = session.query(Users).filter(
-                Users.user_name == username).filter(Users.password == password)
+            query = session.query(User).filter(
+                User.user_name == username).filter(User.password == password)
             try:
                 cherrypy.session['username'] = query.one().user_name
                 cherrypy.session['classtype'] = query.one().class_type
@@ -48,11 +44,13 @@ class Irads(object):
 
     @cherrypy.expose
     @cherrypy.tools.protect()
-    def user(self, firstname=None, lastname=None, address=None, email=None, phone=None, password=None, password2=None):
+    def user(self, firstname=None, lastname=None,
+             address=None, email=None, phone=None,
+             password=None, password2=None):
         template = lookup.get_template('user.mako')
         (u, c) = getUserInfo()
         session = database.get()
-        user = session.query(Users).filter(Users.user_name == u).one()
+        user = session.query(User).filter(User.user_name == u).one()
         if firstname:
             user.person.first_name = firstname
         if lastname:
@@ -79,9 +77,11 @@ class Irads(object):
         oldinfo.append(user.person.phone)
         if firstname or lastname or address or email or phone or password:
             if fail:
-                return template.render(username=u, classtype=c, oldinfo=oldinfo, action="nomatch")
+                return template.render(
+                    username=u, classtype=c, oldinfo=oldinfo, action="nomatch")
             else:
-                return template.render(username=u, classtype=c, oldinfo=oldinfo, action="success")
+                return template.render(
+                    username=u, classtype=c, oldinfo=oldinfo, action="success")
         else:
             return template.render(username=u, classtype=c, oldinfo=oldinfo)
 
@@ -119,12 +119,13 @@ class IradsManager(object):
 
     @cherrypy.expose
     @cherrypy.tools.protect(groups=['a'])
-    def addPerson(self, firstname=None, lastname=None, address=None, email=None, phone=None):
+    def addPerson(self, firstname=None, lastname=None,
+                  address=None, email=None, phone=None):
         template = lookup.get_template('manager/addperson.mako')
         (u, c) = getUserInfo()
         if firstname:
             session = database.get()
-            person = Persons(
+            person = Person(
                 first_name=firstname, last_name=lastname,
                 address=address, email=email, phone=phone)
             session.add(person)
@@ -140,7 +141,7 @@ class IradsManager(object):
         (u, c) = getUserInfo()
         session = database.get()
         persons = []
-        for entry in session.query(Persons).order_by(Persons.last_name).all():
+        for entry in session.query(Person).order_by(Person.last_name).all():
             persons.append(entry.__dict__)
         return template.render(username=u, classtype=c, persons=persons)
 
@@ -151,18 +152,21 @@ class IradsManager(object):
         (u, c) = getUserInfo()
         session = database.get()
         persons = []
-        for entry in session.query(Persons).order_by(Persons.last_name).all():
+        for entry in session.query(Person).order_by(Person.last_name).all():
             persons.append(
                 [entry.person_id, entry.first_name, entry.last_name])
         if username:
             date = time.strftime("%Y-%m-%d")
-            user = Users(user_name=username, password=password,
-                         class_type=classtype, person_id=id, date_registered=date)
+            user = User(user_name=username, password=password,
+                        class_type=classtype, person_id=id,
+                        date_registered=date)
             session.add(user)
             session.commit()
-            return template.render(username=u, classtype=c, persons=persons, action=True)
+            return template.render(
+                username=u, classtype=c, persons=persons, action=True)
         else:
-            return template.render(username=u, classtype=c, persons=persons, action=None)
+            return template.render(
+                username=u, classtype=c, persons=persons, action=None)
 
 
 class IradsReport(object):
@@ -201,15 +205,17 @@ class IradsUpload(object):
         template = lookup.get_template('upload/upload.mako')
         (u, c) = getUserInfo()
         session = database.get()
-        user = session.query(Users).filter(Users.user_name == u).one()
-        person = session.query(Persons).filter(
-            Persons.person_id == user.person_id).one()
+        user = session.query(User).filter(User.user_name == u).one()
+        person = session.query(Person).filter(
+            Person.person_id == user.person_id).one()
         records = person.radiologyrecords_radiologist
         record = []
         for r in records:
             record.append(
-                [r.record_id, r.prescribing_date, r.test_date, r.diagnosis, r.description])
-        return template.render(username=u, classtype=c, action="selectRecord", records=record)
+                [r.record_id, r.prescribing_date, r.test_date, r.diagnosis,
+                 r.description])
+        return template.render(
+            username=u, classtype=c, action="selectRecord", records=record)
 
     @cherrypy.expose
     @cherrypy.tools.protect(groups=['r'])
@@ -218,7 +224,8 @@ class IradsUpload(object):
         (u, c) = getUserInfo()
         p = [["1", "Test"], ["2", "Test"]]
         d = [["1", "Test"], ["2", "Test"]]
-        return template.render(username=u, classtype=c, action="addRecord", patients=p, doctors=d)
+        return template.render(
+            username=u, classtype=c, action="addRecord", patients=p, doctors=d)
 
     @cherrypy.expose
     @cherrypy.tools.protect(groups=['r'])

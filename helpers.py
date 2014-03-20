@@ -1,6 +1,10 @@
 import cherrypy
 
 
+def getUserInfo():
+    return (cherrypy.session.get('username'), cherrypy.session.get('classtype'))
+
+
 def protect(groups=None, redirect=True):
     username = cherrypy.session.get('username')
     classtype = cherrypy.session.get('classtype')

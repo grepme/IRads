@@ -5,20 +5,22 @@ This will initialize the tables like so.
 users(user_name,password,class,person_id,date_registered)
 persons(person_id,first_name,last_name,address,email,phone)
 family_doctor(doctor_id,patient_id)
-radiology_record(record_id,patient_id,doctor_id,radiologist_id,test_type,prescribing_date,test_date,diagnosis, description)
+radiology_record(record_id,patient_id,
+                 doctor_id,radiologist_id,test_type,
+                 prescribing_date,test_date,diagnosis, description)
 pacs_images(record_id,image_id,thumbnail,regular_size,full_size)
 '''
 
 from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy import Column, Integer, String, DateTime, Date, LargeBinary, Enum
+from sqlalchemy import Column, Integer, String, Date, LargeBinary
 from sqlalchemy import ForeignKey
-from sqlalchemy.orm import relationship, backref
+from sqlalchemy.orm import relationship
 
 Base = declarative_base()
 
 
 # To store the personal information
-class Persons(Base):
+class Person(Base):
     __tablename__ = "persons"
 
     person_id = Column(Integer, primary_key=True)
@@ -36,7 +38,7 @@ on his/her role in the log-in
 '''
 
 
-class Users(Base):
+class User(Base):
     __tablename__ = "users"
 
     user_name = Column(String(24), primary_key=True)
@@ -83,19 +85,23 @@ class RadiologyRecord(Base):
 
     # Relationships
     doctor = relationship("Persons",
-                          foreign_keys=[doctor_id], backref="radiologyrecords_doctor")
+                          foreign_keys=[doctor_id],
+                          backref="radiologyrecords_doctor")
     patient = relationship("Persons",
-                           foreign_keys=[patient_id], backref="radiologyrecords")
+                           foreign_keys=[patient_id],
+                           backref="radiologyrecords")
     radiologist = relationship("Persons",
-                               foreign_keys=[radiologist_id], backref="radiologyrecords_radiologist")
+                               foreign_keys=[radiologist_id],
+                               backref="radiologyrecords_radiologist")
 
 
 # To store the pacs images
-class PacsImages(Base):
+class PacsImage(Base):
     __tablename__ = "pacs_images"
 
     record_id = Column(Integer,
-                       ForeignKey('radiology_record.record_id'), primary_key=True)
+                       ForeignKey('radiology_record.record_id'),
+                       primary_key=True)
     image_id = Column(Integer, primary_key=True)
     thumbnail = Column(LargeBinary)
     regular_size = Column(LargeBinary)
