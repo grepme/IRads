@@ -10,7 +10,7 @@
 
   <body>
 
-    <%include file="/navbars/navbar.mako" args="currentPage='manager'"/>
+    <%include file="/navbars/navbar.mako" args="currentPage='report'"/>
 
     <div class="container content">
 
