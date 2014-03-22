@@ -1,6 +1,7 @@
 import cherrypy
 import os.path
 import time
+from cgi import escape
 from config import *
 from helpers import *
 from mako.lookup import TemplateLookup
@@ -20,12 +21,15 @@ class Irads(object):
         global database
         template = lookup.get_template('login.mako')
         if username and password:
+            username = escape(username, True)
+            password = escape(password, True)
             session = database.get()
-            query = session.query(User).filter(
-                User.user_name == username).filter(User.password == password)
             try:
-                cherrypy.session['username'] = query.one().user_name
-                cherrypy.session['classtype'] = query.one().class_type
+                user = session.query(User).filter(
+                    User.user_name == username).filter(
+                        User.password == password).one()
+                cherrypy.session['username'] = user.user_name
+                cherrypy.session['classtype'] = user.class_type
                 raise cherrypy.HTTPRedirect("/home")
             except NoResultFound:
                 template = lookup.get_template('login.mako')
@@ -277,6 +281,32 @@ class IradsReport(object):
         (u, c) = getUserInfo()
         return template.render(username=u, classtype=c)
 
+    @cherrypy.expose
+    @cherrypy.tools.protect(groups=['a'])
+    def search(self, start=None, end=None, diagnosis=None):
+        template = lookup.get_template('report/report.mako')
+        (u, c) = getUserInfo()
+        if start and end and diagnosis:
+            diagnosis = escape(diagnosis, True)
+            session = database.get()
+            results = []
+            for entry in session.query(
+                RadiologyRecord).filter(
+                    RadiologyRecord.test_date >= start).filter(
+                    RadiologyRecord.test_date <= end).filter(
+                    RadiologyRecord.diagnosis.like(
+                        '%' + diagnosis + '%')).all():
+                results.append(
+                    [entry.patient.last_name, entry.patient.first_name,
+                     entry.patient.address, entry.patient.phone,
+                     entry.test_date, entry.diagnosis])
+                template = lookup.get_template('report/results.mako')
+                return template.render(username=u, classtype=c, results=results)
+            if (len(results) == 0):
+                return template.render(username=u, classtype=c, action="fail")
+        else:
+            return template.render(username=u, classtype=c, action="noparams")
+
 
 class IradsSearch(object):
 
@@ -344,7 +374,9 @@ def main():
                     'tools.sessions.timeout': 3600
                     },
               '/css':
-             {'tools.staticdir.on': True, 'tools.staticdir.dir': 'css'}}
+             {'tools.staticdir.on': True, 'tools.staticdir.dir': 'css'},
+              '/js':
+             {'tools.staticdir.on': True, 'tools.staticdir.dir': 'js'}}
 
     Mapping = Irads()
     Mapping.analysis = IradsAnalysis()
