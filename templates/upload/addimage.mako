@@ -10,9 +10,13 @@
   <body>
     <%include file="/navbars/navbar.mako" args="currentPage='upload'"/>
     <div class="container content">
-      <h2>Uploading Module <small>Select an action:</small></h2>
-      <h5><a href="/upload/addRecord">Add a new record</a></h5>
-      <h5><a href="/upload/selectRecord">Add images to an existing record</a></h5>
+      <h2>Uploading Module <small>Upload an image:</small></h2>
+      <form class="form-upload" role="form" action="postImage" method="POST">
+        <h2 class="form-upload-heading">Choose a file:</h2>
+        <input type="file" name="radiologyimage">
+        <p class="help-block">Choose a .jpg file to upload.</p>
+        <button class="btn btn-lg btn-primary btn-block" type="submit">Upload</button>
+      </form>
     </div>
   </div>
 <%include file="/footer.mako"/>

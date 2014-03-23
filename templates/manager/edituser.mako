@@ -64,7 +64,4 @@
           % endif
     </form>
     </div>
-
-
-
 <%include file="/footer.mako"/>

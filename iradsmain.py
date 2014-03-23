@@ -5,6 +5,7 @@ from cgi import escape
 from config import *
 from helpers import *
 from mako.lookup import TemplateLookup
+from operator import itemgetter
 from database.database import Database
 from database.mappings import *
 from sqlalchemy.exc import IntegrityError
@@ -331,7 +332,7 @@ class IradsUpload(object):
     @cherrypy.tools.protect(groups=['r'])
     def selectRecord(self):
         global database
-        template = lookup.get_template('upload/upload.mako')
+        template = lookup.get_template('upload/selectrecord.mako')
         (u, c) = getUserInfo()
         session = database.get()
         user = session.query(User).filter(User.user_name == u).one()
@@ -344,24 +345,41 @@ class IradsUpload(object):
                 [r.record_id, r.prescribing_date, r.test_date, r.diagnosis,
                  r.description])
         return template.render(
-            username=u, classtype=c, action="selectRecord", records=record)
+            username=u, classtype=c, records=record)
 
     @cherrypy.expose
     @cherrypy.tools.protect(groups=['r'])
     def addRecord(self):
-        template = lookup.get_template('upload/upload.mako')
+        template = lookup.get_template('upload/addrecord.mako')
         (u, c) = getUserInfo()
-        p = [["1", "Test"], ["2", "Test"]]
-        d = [["1", "Test"], ["2", "Test"]]
+        session = database.get()
+        patients = []
+        doctors = []
+        for entry in session.query(User).filter(User.class_type == 'p').all():
+            if (entry.person.__dict__ not in patients):
+                patients.append(entry.person.__dict__)
+        for entry in session.query(User).filter(User.class_type == 'd').all():
+            if (entry.person.__dict__ not in doctors):
+                doctors.append(entry.person.__dict__)
+        if (len(patients) == 0):
+            template = lookup.get_template('upload/upload.mako')
+            return template.render(
+                username=u, classtype=c, action="noPatient")
+        if (len(doctors) == 0):
+            template = lookup.get_template('upload/upload.mako')
+            return template.render(
+                username=u, classtype=c, action="noDoctor")
+        p = sorted(patients, key=itemgetter('last_name'))
+        d = sorted(doctors, key=itemgetter('last_name'))
         return template.render(
-            username=u, classtype=c, action="addRecord", patients=p, doctors=d)
+            username=u, classtype=c, patients=p, doctors=d)
 
     @cherrypy.expose
     @cherrypy.tools.protect(groups=['r'])
     def upload(self, id):
-        template = lookup.get_template('upload/upload.mako')
+        template = lookup.get_template('upload/addimage.mako')
         (u, c) = getUserInfo()
-        return template.render(username=u, classtype=c, action="selectImage")
+        return template.render(username=u, classtype=c)
 
 
 def main():
