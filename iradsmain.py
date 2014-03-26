@@ -35,10 +35,8 @@ class Irads(object):
                 cherrypy.session['classtype'] = user.class_type
                 raise cherrypy.HTTPRedirect("/home")
             except NoResultFound:
-                template = lookup.get_template('login.mako')
                 return template.render(loginStatus=1)
             except MultipleResultsFound:
-                template = lookup.get_template('login.mako')
                 return template.render(loginStatus=1)
         else:
             return template.render(loginStatus=0)
@@ -338,9 +336,9 @@ class IradsUpload(object):
         (u, c) = getUserInfo()
         session = database.get()
         user = session.query(User).filter(User.user_name == u).one()
-        person = session.query(Person).filter(
-            Person.person_id == user.person_id).one()
-        records = person.radiologyrecords_radiologist
+        records = session.query(
+            Person).filter(Person.person_id == user.person_id).one(
+            ).radiologyrecords_radiologist
         record = []
         for r in records:
             record.append(
