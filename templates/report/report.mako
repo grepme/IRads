@@ -30,4 +30,6 @@
           <p class="lead">No results found.</p>
           % endif
         </form>
+      </div>
+  </div>
 <%include file="/footer.mako"/>
