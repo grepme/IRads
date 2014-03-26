@@ -1,5 +1,6 @@
 import base64
 import cherrypy
+from database.mappings import *
 from helpers import *
 from mako.lookup import TemplateLookup
 from sqlalchemy import or_

@@ -1,5 +1,6 @@
 import cherrypy
 import time
+from database.mappings import *
 from helpers import *
 from mako.lookup import TemplateLookup
 from sqlalchemy.exc import IntegrityError

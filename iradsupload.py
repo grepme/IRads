@@ -1,4 +1,5 @@
 import cherrypy
+from database.mappings import *
 from helpers import *
 from io import BytesIO
 from mako.lookup import TemplateLookup
