@@ -11,6 +11,7 @@ from operator import itemgetter
 from PIL import Image
 from database.database import Database
 from database.mappings import *
+from sqlalchemy import or_
 from sqlalchemy.exc import IntegrityError
 from sqlalchemy.orm.exc import NoResultFound, MultipleResultsFound
 
@@ -342,6 +343,15 @@ class IradsSearch(object):
         if (c == 'p'):
             query = query.filter(
                 RadiologyRecord.patient_id == user.person_id)
+        if (keywords):
+            query = query.join(
+                Person, RadiologyRecord.patient_id == Person.person_id)
+            for word in keywords.split():
+                query = query.filter(or_(
+                    Person.last_name.ilike("%"+word+"%"),
+                    Person.first_name.ilike("%"+word+"%"),
+                    RadiologyRecord.diagnosis.ilike("%"+word+"%"),
+                    RadiologyRecord.description.ilike("%"+word+"%")))
         results = []
         for entry in query.all():
                 current = {}
