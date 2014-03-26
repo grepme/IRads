@@ -13,6 +13,15 @@
       <h2>Uploading Module <small>Select an action:</small></h2>
       <h5><a href="/upload/addRecord">Add a new record</a></h5>
       <h5><a href="/upload/selectRecord">Add images to an existing record</a></h5>
+      % if action == 'noPatient':
+      <p class="lead">No patients found. Cannot add record.</p>
+      % elif action == 'noDoctor':
+      <p class="lead">No doctors found. Cannot add record.</p>
+      % elif action == 'success':
+      <p class="lead">Record added successfully.</p>
+      % elif action == 'error':
+      <p class="lead">An error occurred.</p>
+      % endif
     </div>
   </div>
 <%include file="/footer.mako"/>

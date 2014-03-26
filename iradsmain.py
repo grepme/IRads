@@ -376,6 +376,29 @@ class IradsUpload(object):
 
     @cherrypy.expose
     @cherrypy.tools.protect(groups=['r'])
+    def postRecord(self, patient=None, doctor=None, test_type=None,
+                   test_date=None, prescribing_date=None, diagnosis=None,
+                   description=None):
+        template = lookup.get_template('upload/upload.mako')
+        (u, c) = getUserInfo()
+        if (patient and doctor and test_type and test_date and prescribing_date
+                and diagnosis and description):
+            session = database.get()
+            radiologist = session.query(User).filter(User.user_name == u).one()
+            record = RadiologyRecord(
+                patient_id=patient, doctor_id=doctor,
+                radiologist_id=radiologist.person_id, test_type=test_type,
+                test_date=test_date, prescribing_date=prescribing_date,
+                diagnosis=diagnosis, description=description)
+            session.add(record)
+            session.commit()
+            return template.render(username=u, classtype=c, action="success")
+        else:
+            return template.render(
+                username=u, classtype=c, action="error")
+
+    @cherrypy.expose
+    @cherrypy.tools.protect(groups=['r'])
     def upload(self, id):
         template = lookup.get_template('upload/addimage.mako')
         (u, c) = getUserInfo()

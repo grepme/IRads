@@ -34,11 +34,11 @@
         </div>
         <div class="form-group">
           <label for="test_date">Test date</label>
-          <input type="text" class="form-control" name="test_date" maxlength="10" placeholder="YYYY-MM-DD" required>
+          <input type="text" class="form-control" name="test_date" maxlength="10" placeholder="YYYY-MM-DD" data-provide="datepicker" data-date-format="yyyy-mm-dd" data-date-today-btn="true" data-date-autoclose="true" data-date-today-highlight="true" required>
         </div>
         <div class="form-group">
           <label for="prescribing_date">Prescribing date</label>
-          <input type="text" class="form-control" name="prescribing_date" maxlength="10" placeholder="YYYY-MM-DD" required>
+          <input type="text" class="form-control" name="prescribing_date" maxlength="10" placeholder="YYYY-MM-DD" data-provide="datepicker" data-date-format="yyyy-mm-dd" data-date-today-btn="true" data-date-autoclose="true" data-date-today-highlight="true" required>
         </div>
         <div class="form-group">
           <label for="diagnosis">Diagnosis</label>
@@ -46,7 +46,7 @@
         </div>
         <div class="form-group">
           <label for="description">Description</label>
-          <textarea class="form-control" rows="10" name="test_type" maxlength="1024" placeholder="Enter description (max 1024 characters)" required></textarea>
+          <textarea class="form-control" rows="10" name="description" maxlength="1024" placeholder="Enter description (max 1024 characters)" required></textarea>
         </div>
         <button class="btn btn-lg btn-primary btn-block btn-add" type="submit">Add</button>
       </form>
