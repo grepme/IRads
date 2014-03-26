@@ -14,9 +14,9 @@
       <form role="form" action="/search/search" method="POST">
         <label for="datepicker">Date range</label>
         <div class="input-daterange input-group form-group" id="datepicker">
-          <input type="text" class="input-sm form-control" name="start" data-provide="datepicker" data-date-format="yyyy-mm-dd" data-date-today-btn="true" data-date-autoclose="true" data-date-today-highlight="true" required/>
+          <input type="text" class="input-sm form-control" name="start" placeholder="YYYY-MM-DD" data-provide="datepicker" data-date-format="yyyy-mm-dd" data-date-today-btn="true" data-date-autoclose="true" data-date-today-highlight="true" required/>
           <span class="input-group-addon">to</span>
-          <input type="text" class="input-sm form-control" name="end" data-provide="datepicker" data-date-format="yyyy-mm-dd" data-date-today-btn="true" data-date-autoclose="true" data-date-today-highlight="true" required/>
+          <input type="text" class="input-sm form-control" name="end" placeholder="YYYY-MM-DD" data-provide="datepicker" data-date-format="yyyy-mm-dd" data-date-today-btn="true" data-date-autoclose="true" data-date-today-highlight="true" required/>
         </div>
         <div class="form-group">
           <label for="keywords">Keyword(s)</label>
