@@ -287,7 +287,7 @@ class IradsReport(object):
     @cherrypy.expose
     @cherrypy.tools.protect(groups=['a'])
     def search(self, start=None, end=None, diagnosis=None):
-        template = lookup.get_template('report/report.mako')
+        template = lookup.get_template('report/results.mako')
         (u, c) = getUserInfo()
         if start and end and diagnosis:
             diagnosis = escape(diagnosis, True)
@@ -298,15 +298,15 @@ class IradsReport(object):
                     RadiologyRecord.test_date >= start,
                     RadiologyRecord.test_date <= end,
                     RadiologyRecord.diagnosis.ilike(
-                        '%' + diagnosis + '%')).all():
+                        "%" + diagnosis  + "%")).all():
                 results.append(
                     [entry.patient.last_name, entry.patient.first_name,
                      entry.patient.address, entry.patient.phone,
                      entry.test_date, entry.diagnosis])
-                template = lookup.get_template('report/results.mako')
-                return template.render(username=u, classtype=c, results=results)
             if (len(results) == 0):
+                template = lookup.get_template('report/report.mako')
                 return template.render(username=u, classtype=c, action="fail")
+            return template.render(username=u, classtype=c, results=results)
         else:
             return template.render(username=u, classtype=c, action="noparams")
 
