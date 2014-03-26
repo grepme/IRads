@@ -19,6 +19,8 @@
       <p class="lead">No doctors found. Cannot add record.</p>
       % elif action == 'success':
       <p class="lead">Record added successfully.</p>
+      % elif action == 'added':
+      <p class="lead">Image added successfully.</p>
       % elif action == 'error':
       <p class="lead">An error occurred.</p>
       % endif

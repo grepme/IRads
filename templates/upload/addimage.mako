@@ -11,7 +11,7 @@
     <%include file="/navbars/navbar.mako" args="currentPage='upload'"/>
     <div class="container content">
       <h2>Uploading Module <small>Upload an image:</small></h2>
-      <form class="form-upload" role="form" action="postImage" method="POST">
+      <form class="form-upload" role="form" action="/upload/postImage/${id}" method="POST" enctype="multipart/form-data">
         <h2 class="form-upload-heading">Choose a file:</h2>
         <input type="file" name="radiologyimage">
         <p class="help-block">Choose a .jpg file to upload.</p>

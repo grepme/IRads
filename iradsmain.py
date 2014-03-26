@@ -4,8 +4,10 @@ import time
 from cgi import escape
 from config import *
 from helpers import *
+from io import BytesIO
 from mako.lookup import TemplateLookup
 from operator import itemgetter
+from PIL import Image
 from database.database import Database
 from database.mappings import *
 from sqlalchemy.exc import IntegrityError
@@ -293,8 +295,8 @@ class IradsReport(object):
             results = []
             for entry in session.query(
                 RadiologyRecord).filter(
-                    RadiologyRecord.test_date >= start).filter(
-                    RadiologyRecord.test_date <= end).filter(
+                    RadiologyRecord.test_date >= start,
+                    RadiologyRecord.test_date <= end,
                     RadiologyRecord.diagnosis.like(
                         '%' + diagnosis + '%')).all():
                 results.append(
@@ -399,10 +401,38 @@ class IradsUpload(object):
 
     @cherrypy.expose
     @cherrypy.tools.protect(groups=['r'])
-    def upload(self, id):
+    def selectImage(self, id):
         template = lookup.get_template('upload/addimage.mako')
         (u, c) = getUserInfo()
-        return template.render(username=u, classtype=c)
+        return template.render(username=u, classtype=c, id=id)
+
+    @cherrypy.expose
+    @cherrypy.tools.protect(groups=['r'])
+    def postImage(self, id=None, radiologyimage=None):
+        template = lookup.get_template('upload/upload.mako')
+        (u, c) = getUserInfo()
+        if (id and radiologyimage.file):
+            image = Image.open(BytesIO(radiologyimage.file.read()))
+            fullstream = BytesIO()
+            image.save(fullstream, "JPEG")
+            normalstream = BytesIO()
+            normalimage = image.copy()
+            normalimage.thumbnail((600, 600), Image.ANTIALIAS)
+            normalimage.save(normalstream, "JPEG")
+            thumbstream = BytesIO()
+            thumbimage = image.copy()
+            thumbimage.thumbnail((200, 200), Image.ANTIALIAS)
+            thumbimage.save(thumbstream, "JPEG")
+            session = database.get()
+            pacsimage = PacsImage(
+                record_id=id, thumbnail=thumbstream.getvalue(),
+                regular_size=normalstream.getvalue(),
+                full_size=fullstream.getvalue())
+            session.add(pacsimage)
+            session.commit()
+            return template.render(username=u, classtype=c, action="added")
+        else:
+            return template.render(username=u, classtype=c, action="error")
 
 
 def main():

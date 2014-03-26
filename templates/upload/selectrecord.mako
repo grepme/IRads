@@ -14,21 +14,19 @@
       <table class="table table-striped table-bordered table-hover">
         <thead>
           <tr>
-            <th>#</th>
             <th>Prescribing Date</th>
-            <th>Test Date</th>
-            <th>Diagnosis</th>
+            <th>Testing&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; date</th>
+            <th>Diagnosis&nbsp;&nbsp;&nbsp;&nbsp;</th>
             <th>Description</th>
           </tr>
         </thead>
         <tbody>
         % for record in records:
           <tr>
-            <td><a href="/upload/upload/${record[0]}">${record[0]}</a></td>
-            <td><a href="/upload/upload/${record[0]}">${record[1]}</a></td>
-            <td><a href="/upload/upload/${record[0]}">${record[2]}</a></td>
-            <td><a href="/upload/upload/${record[0]}">${record[3]}</a></td>
-            <td><a href="/upload/upload/${record[0]}">${record[4]}</a></td>
+            <td><a href="/upload/selectImage/${record[0]}">${record[1]}</a></td>
+            <td><a href="/upload/selectImage/${record[0]}">${record[2]}</a></td>
+            <td><a href="/upload/selectImage/${record[0]}">${record[3]}</a></td>
+            <td><a href="/upload/selectImage/${record[0]}">${record[4]}</a></td>
           </tr>
         % endfor
         </tbody>
