@@ -7,23 +7,46 @@
       <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
     <![endif]-->
   </head>
-
   <body>
-
     <%include file="/navbars/navbar.mako" args="currentPage='search'"/>
-
-    <div class="container">
-
-      <!-- Main component for a primary marketing message or call to action -->
-      <div class="jumbotron">
-        <h1>Navbar example</h1>
-        <p>This example is a quick exercise to illustrate how the default, static and fixed to top navbar work. It includes the responsive CSS and HTML, so it also adapts to your viewport and device.</p>
-        <p>To see the difference between static and fixed top navbars, just scroll.</p>
-        <p>
-          <a class="btn btn-lg btn-primary" href="../../components/#navbar" role="button">View navbar docs &raquo;</a>
-        </p>
-      </div>
-
+    <div class="container content">
+      <h2>Search Module <small>Enter criteria:</small></h2>
+      <form role="form" action="/search/search" method="POST">
+        <label for="datepicker">Date range</label>
+        <div class="input-daterange input-group form-group" id="datepicker">
+          <input type="text" class="input-sm form-control" name="start" data-provide="datepicker" data-date-format="yyyy-mm-dd" data-date-today-btn="true" data-date-autoclose="true" data-date-today-highlight="true" required/>
+          <span class="input-group-addon">to</span>
+          <input type="text" class="input-sm form-control" name="end" data-provide="datepicker" data-date-format="yyyy-mm-dd" data-date-today-btn="true" data-date-autoclose="true" data-date-today-highlight="true" required/>
+        </div>
+        <div class="form-group">
+          <label for="keywords">Keyword(s)</label>
+          <input type="text" class="form-control" name="keywords" placeholder="Enter keyword(s)" required>
+        </div>
+        <div class="radio">
+          <label>
+            <input type="radio" name="sort" id="sortdatenewest" value="newest" checked>
+            Sort by most-recent-first
+          </label>
+        </div>
+        <div class="radio">
+          <label>
+            <input type="radio" name="sort" id="sortdateoldest" value="oldest">
+            Sort by least-recent-first
+          </label>
+        </div>
+        <div class="radio">
+          <label>
+            <input type="radio" name="sort" id="sortscore" value="score">
+            Sort by score
+          </label>
+        </div>
+        <button class="btn btn-lg btn-primary btn-block btn-add" type="submit">Search</button>
+        % if action == "noparams":
+        <p class="lead">Please fill out all fields.</p>
+        % elif action == "fail":
+        <p class="lead">No results found.</p>
+        % endif
+      </form>
     </div>
-
+  </div>
 <%include file="/footer.mako"/>
