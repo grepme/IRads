@@ -1,3 +1,4 @@
+import base64
 import cherrypy
 import os.path
 import time
@@ -295,7 +296,7 @@ class IradsReport(object):
                 RadiologyRecord).filter(
                     RadiologyRecord.test_date >= start,
                     RadiologyRecord.test_date <= end,
-                    RadiologyRecord.diagnosis.like(
+                    RadiologyRecord.diagnosis.ilike(
                         '%' + diagnosis + '%')).all():
                 results.append(
                     [entry.patient.last_name, entry.patient.first_name,
@@ -317,6 +318,56 @@ class IradsSearch(object):
         template = lookup.get_template('search/search.mako')
         (u, c) = getUserInfo()
         return template.render(username=u, classtype=c)
+
+    @cherrypy.expose
+    @cherrypy.tools.protect()
+    def search(self, start=None, end=None, keywords=None, sort=None):
+        template = lookup.get_template('search/search_results.mako')
+        (u, c) = getUserInfo()
+        if not ((start and end and sort) or (keywords and sort)):
+            template = lookup.get_template('search/search.mako')
+            return template.render(username=u, classtype=c, action="noparams")
+        session = database.get()
+        user = session.query(User).filter(User.user_name == u).one()
+        query = session.query(RadiologyRecord)
+        if (start and end):
+            query = query.filter(RadiologyRecord.test_date >= start,
+                                 RadiologyRecord.test_date <= end)
+        if (c == 'd'):
+            query = query.filter(
+                RadiologyRecord.doctor_id == user.person_id)
+        if (c == 'r'):
+            query = query.filter(
+                RadiologyRecord.radiologist_id == user.person_id)
+        if (c == 'p'):
+            query = query.filter(
+                RadiologyRecord.patient_id == user.person_id)
+        results = []
+        for entry in query.all():
+                current = {}
+                current['patient_name'] = entry.patient.last_name + \
+                    ", " + entry.patient.first_name
+                current['doctor_name'] = entry.doctor.last_name + \
+                    ", " + entry.doctor.first_name
+                current['radiologist_name'] = entry.radiologist.last_name + \
+                    ", " + entry.radiologist.first_name
+                current['test_type'] = entry.test_type
+                current['prescribing_date'] = entry.prescribing_date
+                current['test_date'] = entry.test_date
+                current['diagnosis'] = entry.diagnosis
+                current['description'] = entry.description
+                current['images'] = []
+                if (len(entry.pacsimage) > 0):
+                    for image in entry.pacsimage:
+                        current['images'].append(
+                            [image.image_id,
+                                base64.b64encode(image.thumbnail)])
+                results.append(current)
+        if (len(results) > 0):
+            return template.render(username=u, classtype=c, results=results)
+        else:
+            template = lookup.get_template('search/search.mako')
+            return template.render(username=u, classtype=c, action="fail")
 
 
 class IradsUpload(object):
