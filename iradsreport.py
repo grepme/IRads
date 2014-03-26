@@ -28,6 +28,7 @@ class IradsReport(object):
             diagnosis = escape(diagnosis, True)
             session = self.database.get()
             results = []
+            # TODO split keyword to work with multiple words
             for entry in session.query(
                 RadiologyRecord).filter(
                     RadiologyRecord.test_date >= start,

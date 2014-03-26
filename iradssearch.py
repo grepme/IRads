@@ -3,7 +3,7 @@ import cherrypy
 from database.mappings import *
 from helpers import *
 from mako.lookup import TemplateLookup
-from sqlalchemy import or_
+from sqlalchemy import desc, or_
 
 
 class IradsSearch(object):
@@ -38,12 +38,18 @@ class IradsSearch(object):
         if (c == 'd'):
             query = query.filter(
                 RadiologyRecord.doctor_id == user.person_id)
-        if (c == 'r'):
+        elif (c == 'r'):
             query = query.filter(
                 RadiologyRecord.radiologist_id == user.person_id)
-        if (c == 'p'):
+        elif (c == 'p'):
             query = query.filter(
                 RadiologyRecord.patient_id == user.person_id)
+        if (sort == 'newest'):
+            query = query.order_by(desc(RadiologyRecord.test_date))
+        elif (sort == 'oldest'):
+            query = query.order_by(RadiologyRecord.test_date)
+        else:
+            query = query
         if (keywords):
             query = query.join(
                 Person, RadiologyRecord.patient_id == Person.person_id)
