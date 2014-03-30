@@ -36,8 +36,10 @@ class IradsSearch(object):
             query = query.filter(RadiologyRecord.test_date >= start,
                                  RadiologyRecord.test_date <= end)
         if (c == 'd'):
-            query = query.filter(
-                RadiologyRecord.doctor_id == user.person_id)
+            query = query.join(
+                FamilyDoctor, FamilyDoctor.doctor_id == user.person_id).filter(
+                    RadiologyRecord.doctor_id == user.person_id).filter(
+                        FamilyDoctor.patient_id == RadiologyRecord.patient_id)
         elif (c == 'r'):
             query = query.filter(
                 RadiologyRecord.radiologist_id == user.person_id)
