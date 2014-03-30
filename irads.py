@@ -8,12 +8,18 @@ from sqlalchemy.orm.exc import NoResultFound, MultipleResultsFound
 
 class Irads(object):
 
+    '''
+    This class is responsible for the login module and providing
+    access to all other modules.
+    '''
+
     database = None
     lookup = TemplateLookup(directories=['templates'])
 
     def __init__(self, database):
         self.database = database
 
+    # Login page
     @cherrypy.expose
     def index(self, username=None, password=None):
         global database
@@ -36,6 +42,7 @@ class Irads(object):
         else:
             return template.render(loginStatus=0)
 
+    # Main home page
     @cherrypy.expose
     @cherrypy.tools.protect()
     def home(self):
@@ -43,6 +50,7 @@ class Irads(object):
         (u, c) = getUserInfo()
         return template.render(username=u, classtype=c)
 
+    # Page for editing your own information
     @cherrypy.expose
     @cherrypy.tools.protect()
     def user(self, firstname=None, lastname=None,
@@ -53,6 +61,7 @@ class Irads(object):
         session = self.database.get()
         user = session.query(User).filter(User.user_name == u).one()
         fail = False
+        # make sure password was entered correctly
         if password or password2:
             if password == password2:
                 user.password = password
@@ -88,12 +97,14 @@ class Irads(object):
         else:
             return template.render(username=u, classtype=c, oldinfo=oldinfo)
 
+    # Logout page, clears session
     @cherrypy.expose
     def logout(self):
         cherrypy.session.delete()
         template = self.lookup.get_template('login.mako')
         return template.render(loginStatus=2)
 
+    # Displays an error message when login failed
     @cherrypy.expose
     def error(self):
         cherrypy.session.delete()
