@@ -19,42 +19,12 @@
 
       <form role="form" class="form-add" action="/manager/editUser/${user['user_name']}" method="POST">
         <div class="form-group">
-          <label for="username">Username</label>
-          <input type="text" class="form-control" name="username" maxlength="24" placeholder="${user['user_name']}" autofocus>
-        </div>
-        <div class="form-group">
           <label for="password">Password</label>
           <input type="password" class="form-control" name="password" maxlength="24" placeholder="Enter new password (max 24 characters)">
         </div>
         <div class="form-group">
           <label for="password2">Repeat password</label>
           <input type="password" class="form-control" name="password2" maxlength="24" placeholder="Enter new password (max 24 characters)">
-        </div>
-        <div class="form-group">
-          <label for="classtype">Access class</label>
-          <select name="classtype" class="form-control" required>
-            % if user['class_type'] == 'a':
-            <option value="a" selected>Administrator</option>
-            <option value="d">Doctor</option>
-            <option value="p">Patient</option>
-            <option value="r">Radiologist</option>
-            % elif user['class_type'] == 'd':
-            <option value="a">Administrator</option>
-            <option value="d" selected>Doctor</option>
-            <option value="p">Patient</option>
-            <option value="r">Radiologist</option>
-            % elif user['class_type'] == 'p':
-            <option value="a">Administrator</option>
-            <option value="d">Doctor</option>
-            <option value="p" selected>Patient</option>
-            <option value="r">Radiologist</option>
-            % elif user['class_type'] == 'r':
-            <option value="a">Administrator</option>
-            <option value="d">Doctor</option>
-            <option value="p">Patient</option>
-            <option value="r" selected>Radiologist</option>
-            % endif
-          </select>
         </div>
         <button class="btn btn-lg btn-primary btn-block btn-add" type="submit">Edit</button>
           % if action == "success":

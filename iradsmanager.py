@@ -108,8 +108,7 @@ class IradsManager(object):
 
     @cherrypy.expose
     @cherrypy.tools.protect(groups=['a'])
-    def editUser(self, userToEdit, username=None, password=None,
-                 password2=None, classtype=None):
+    def editUser(self, userToEdit, password=None, password2=None):
         template = self.lookup.get_template('manager/edituser.mako')
         (u, c) = getUserInfo()
         session = self.database.get()
@@ -120,20 +119,11 @@ class IradsManager(object):
                 user.password = password
             else:
                 fail = True
-        if username and not fail:
-            user.user_name = username
-        if classtype and not fail:
-            user.class_type = classtype
-        if username or password or classtype:
+        if password:
             if not fail:
                 session.commit()
-        if username or password or classtype:
-            if username and not fail:
-                user = session.query(User).filter(
-                    User.user_name == username).one()
-            else:
-                user = session.query(User).filter(
-                    User.user_name == userToEdit).one()
+            user = session.query(User).filter(
+                User.user_name == userToEdit).one()
             if fail:
                 return template.render(username=u, classtype=c,
                                        user=user.__dict__, action="nomatch")
