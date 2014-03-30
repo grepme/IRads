@@ -8,6 +8,10 @@ from sqlalchemy.exc import IntegrityError
 
 class IradsManager(object):
 
+    """Responsible for all management (adding or updating)
+    of users, people and family doctors.
+    """
+
     database = None
     lookup = TemplateLookup(directories=['templates'])
 
@@ -17,6 +21,9 @@ class IradsManager(object):
     @cherrypy.expose
     @cherrypy.tools.protect(groups=['a'])
     def index(self):
+        """Returns the main page of the module which
+        allows the administrator to select an action.
+        """
         template = self.lookup.get_template('manager/manager.mako')
         (u, c) = getUserInfo()
         return template.render(username=u, classtype=c)
@@ -25,6 +32,9 @@ class IradsManager(object):
     @cherrypy.tools.protect(groups=['a'])
     def addPerson(self, firstname=None, lastname=None,
                   address=None, email=None, phone=None):
+        """Returns a page that allows an admin to
+        add a person to the system.
+        """
         template = self.lookup.get_template('manager/addperson.mako')
         (u, c) = getUserInfo()
         if firstname:
@@ -32,6 +42,10 @@ class IradsManager(object):
             person = Person(
                 first_name=firstname, last_name=lastname,
                 address=address, email=email, phone=phone)
+            '''
+            INSERT INTO persons (first_name, last_name, address, email, phone)
+            VALUES (firstname, lastname, address, email, phone)
+            '''
             session.add(person)
             session.commit()
             return template.render(username=u, classtype=c, action=True)
@@ -42,6 +56,9 @@ class IradsManager(object):
     @cherrypy.tools.protect(groups=['a'])
     def editPerson(self, id, firstname=None, lastname=None,
                    address=None, email=None, phone=None):
+        """Returns a page that allows an admin to
+        edit a person's information.
+        """
         template = self.lookup.get_template('manager/editperson.mako')
         (u, c) = getUserInfo()
         session = self.database.get()

@@ -1,8 +1,8 @@
 #!/usr/bin/python
 
 import cherrypy
+import config
 import os.path
-from config import *
 from database.database import Database
 from database.mappings import *
 from helpers import *
@@ -15,28 +15,35 @@ from iradsupload import IradsUpload
 
 
 def main():
+    """Main Irads function.
+    Sets everything up and launches our application
+    """
+
     # Set up CherryPy config
     current_dir = os.path.dirname(os.path.abspath(__file__))
 
-    config = {'/': {'tools.staticdir.root': current_dir,
-                    'tools.sessions.on': True,
-                    'tools.sessions.storage_type': "ram",
-                    'tools.sessions.timeout': 3600
-                    },
-              '/css':
-             {'tools.staticdir.on': True, 'tools.staticdir.dir': 'css'},
-              '/doc':
-             {'tools.staticdir.on': True, 'tools.staticdir.dir': 'doc'},
-              '/js':
-             {'tools.staticdir.on': True, 'tools.staticdir.dir': 'js'}}
+    # Static directories for serving up various files
+    conf = {'/': {'tools.staticdir.root': current_dir,
+                  'tools.sessions.on': True,
+                  'tools.sessions.storage_type': "ram",
+                  'tools.sessions.timeout': 3600
+                  },
+            '/css':
+           {'tools.staticdir.on': True, 'tools.staticdir.dir': 'css'},
+            '/doc':
+           {'tools.staticdir.on': True, 'tools.staticdir.dir': 'doc'},
+            '/js':
+           {'tools.staticdir.on': True, 'tools.staticdir.dir': 'js'}}
 
-    cherrypy.config.update({'server.socket_host': '0.0.0.0',
-                            'server.socket_port': 27848})
+    # Set up IP address and port
+    cherrypy.config.update({'server.socket_host': config.IP,
+                            'server.socket_port': config.PORT})
 
     # Connect to the database
     database = Database(connect=True)
     database.connect(
-        DATABASE_USERNAME, DATABASE_PASSWORD, DATABASE_HOSTNAME, DATABASE)
+        config.DATABASE_USERNAME, config.DATABASE_PASSWORD,
+        config.DATABASE_HOSTNAME, config.DATABASE)
 
     # Set up CherryPy mapping
     Mapping = Irads(database)
@@ -47,7 +54,7 @@ def main():
     Mapping.upload = IradsUpload(database)
 
     # Start
-    cherrypy.quickstart(Mapping, '/', config=config)
+    cherrypy.quickstart(Mapping, '/', config=conf)
 
 if (__name__ == '__main__'):
     main()
