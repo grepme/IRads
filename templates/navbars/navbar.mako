@@ -7,7 +7,7 @@
             <li
             % if currentPage == 'home':
               class="active"
-            % endif  
+            % endif
             ><a href="/home">Home</a></li>
             % if classtype == 'a':
             <li
@@ -40,8 +40,9 @@
              ><a href="/search">Search</a></li>
           </ul>
           <ul class="nav navbar-nav navbar-right">
+          <li><a href="/doc" target="_blank">Documentation</a></li>
             <li><a href="/user">Logged in as: ${username}</a></li>
-            <li 
+            <li
             % if currentPage == 'user':
               class="active"
             % endif

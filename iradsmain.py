@@ -1,3 +1,5 @@
+#!/usr/bin/python
+
 import cherrypy
 import os.path
 from config import *
@@ -23,6 +25,8 @@ def main():
                     },
               '/css':
              {'tools.staticdir.on': True, 'tools.staticdir.dir': 'css'},
+              '/doc':
+             {'tools.staticdir.on': True, 'tools.staticdir.dir': 'doc'},
               '/js':
              {'tools.staticdir.on': True, 'tools.staticdir.dir': 'js'}}
 

@@ -5,7 +5,7 @@
  <body>
 
     <div class="container">
-	 
+
       <form class="form-signin" role="form" action="/" method="POST">
         <h2 class="form-signin-heading">IRads: Please sign in</h2>
         <input type="username" name="username" class="form-control" placeholder="Username" maxlength="24" required autofocus>
@@ -19,6 +19,7 @@
     % elif loginStatus==3:
   <p class="lead">You are not logged in.</p>
     % endif
+    <p class="lead"><a href="/doc" target="_blank">Documentation</a></p>
     </div>
 
 <%include file="/footer.mako"/>
