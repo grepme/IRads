@@ -41,6 +41,14 @@
 		<button type="button" class="btn btn-primary">Increase</button>
 		<button type="button" class="btn btn-danger">Decrease</button>
 	  </p>
+	  <p>Month 
+		<button type="button" class="btn btn-primary">Increase</button>
+		<button type="button" class="btn btn-danger">Decrease</button>
+	  </p>
+	  <p>Week 
+		<button type="button" class="btn btn-primary">Increase</button>
+		<button type="button" class="btn btn-danger">Decrease</button>
+	  </p>
     </div>
   </div>
 <%include file="/footer.mako"/>
