@@ -76,7 +76,8 @@ class IradsAnalysis(object):
 		if 	patient != "_ALLPATIENTS_":
 			query = query.filter(RadiologyRecord.patient.person_id == patient)
 	
-
+		results = query.all()
+		
         (u, c) = getUserInfo()
 
         conn.close()
