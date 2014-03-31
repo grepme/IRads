@@ -27,6 +27,7 @@
 	   % for result in results:
         <tr>
           <td>${result[0].patient.last_name}, ${result[0].patient.first_name}</td>
+		  <td>${result[0]}
         </tr>
 		% endfor
       </tbody>
