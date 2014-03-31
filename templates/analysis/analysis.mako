@@ -19,7 +19,7 @@
           <input type="text" class="input-sm form-control" name="start" placeholder="YYYY-MM-DD" data-provide="datepicker" data-date-format="yyyy-mm-dd" data-date-today-btn="true" data-date-autoclose="true" data-date-today-highlight="true"/>
           <span class="input-group-addon">to</span>
           <input type="text" class="input-sm form-control" name="end" placeholder="YYYY-MM-DD" data-provide="datepicker" data-date-format="yyyy-mm-dd" data-date-today-btn="true" data-date-autoclose="true" data-date-today-highlight="true"/>
-		  <span class="small">(if blank, will search all records)</span>
+		      <span class="input-group-addon small">(if blank, will search all records)</span>
         </div>
         <div class="form-group">
           <label for="patient">Test Type</label>
