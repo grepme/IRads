@@ -67,6 +67,7 @@ class IradsAnalysis(object):
         if patient != "_ALLPATIENTS_":
             query = query.filter(RadiologyRecord.patient.person_id == patient)
 
+        results = query.all()
         #results = []
         #for entry in query.all():
         #    if entry.__dict__ not in results:
