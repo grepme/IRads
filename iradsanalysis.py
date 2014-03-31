@@ -56,7 +56,7 @@ class IradsAnalysis(object):
         #query = session.query(RadiologyRecord).join(PacsImage, RadiologyRecord.record_id == PacsImage.record_id).join(Person, RadiologyRecord.patient_id == Person.person_id)
         query = session.query(RadiologyRecord, RadiologyRecord.test_type, func.count(PacsImage.record_id).label('total')).join(PacsImage).group_by(RadiologyRecord.test_type).order_by(RadiologyRecord.patient_id)
         
-		# All edge cases are inclusive
+        # All edge cases are inclusive
         if (start != "") and (end != ""):
             query = query.filter(
                 RadiologyRecord.test_date <= end).filter(
