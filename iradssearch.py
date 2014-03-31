@@ -8,6 +8,10 @@ from sqlalchemy import desc, or_
 
 class IradsSearch(object):
 
+    """Responsible for searching the database for relevant radiology
+    records based on search paramenters and user's class security level.
+    """
+
     database = None
     lookup = TemplateLookup(directories=['templates'])
 
@@ -17,6 +21,9 @@ class IradsSearch(object):
     @cherrypy.expose
     @cherrypy.tools.protect()
     def index(self):
+        """Returns the main page that allows for the input of
+        the parameters the user wants to search by.
+        """
         template = self.lookup.get_template('search/search.mako')
         (u, c) = getUserInfo()
         return template.render(username=u, classtype=c)
@@ -24,6 +31,9 @@ class IradsSearch(object):
     @cherrypy.expose
     @cherrypy.tools.protect()
     def search(self, start=None, end=None, keywords=None, sort=None):
+        """Validates the parameters, search the database, and
+        returns the results or an error message page.
+        """
         template = self.lookup.get_template('search/search_results.mako')
         (u, c) = getUserInfo()
         if not ((start and end and sort) or (keywords and sort)):
@@ -32,10 +42,17 @@ class IradsSearch(object):
         session = self.database.get()
         user = session.query(User).filter(User.user_name == u).one()
         query = session.query(RadiologyRecord)
+        # Check if a date has been passed
         if (start and end):
             query = query.filter(RadiologyRecord.test_date >= start,
                                  RadiologyRecord.test_date <= end)
+        # Check user's security level
         if (c == 'd'):
+            '''
+            Checks that both the record's doctor id is the same as the
+            current user's id and that the user's id is in the family_doctor
+            table for the record's patient id
+            '''
             query = query.join(
                 FamilyDoctor, FamilyDoctor.doctor_id == user.person_id).filter(
                     RadiologyRecord.doctor_id == user.person_id).filter(
@@ -46,6 +63,7 @@ class IradsSearch(object):
         elif (c == 'p'):
             query = query.filter(
                 RadiologyRecord.patient_id == user.person_id)
+        # Checks sort type
         if (sort == 'newest'):
             query = query.order_by(desc(RadiologyRecord.test_date))
         elif (sort == 'oldest'):
@@ -53,6 +71,10 @@ class IradsSearch(object):
         else:
             query = query
         if (keywords):
+            '''
+            Split keywords into separate words and search for each word
+            as a keyword instead of the whole keyword as one string
+            '''
             query = query.join(
                 Person, RadiologyRecord.patient_id == Person.person_id)
             for word in keywords.split():
@@ -63,6 +85,7 @@ class IradsSearch(object):
                     RadiologyRecord.description.ilike("%"+word+"%")))
         results = []
         for entry in query.all():
+                # Build a dict to the structure that the template expects
                 current = {}
                 current['patient_name'] = entry.patient.last_name + \
                     ", " + entry.patient.first_name
