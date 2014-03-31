@@ -26,12 +26,12 @@ class IradsAnalysis(object):
 
         # Get a list of all patients
         patients = []
-		testTypes = []
+        testTypes = []
         for entry in session.query(User).filter(User.class_type == 'p').all():
             if (entry.person.__dict__ not in patients):
                 patients.append(entry.person.__dict__)
-				
-        for entry in session.query(RadiologyRecord).filter(distinct(RadiologyRecord.test_type)).all():
+
+        for entry in session.query(RadiologyRecord).distinct().all():
             if (entry.test_type not in testTypes):
                 testTypes.append(entry.test_type)
 
@@ -64,10 +64,10 @@ class IradsAnalysis(object):
             elif options == "year":
                 minimalStartDate = today - \
                     datetime.timedelata(days=datetime.date.today().timetuple().tm_yday + 1)
-			
-			results = session.query(func.count(RadiologyRecord.pacsimage) ,RadiologyRecord).filter( \
-			minimalStartDate <= RadiologyRecord.test_date <= today).ilike("%" + keywords + "%")).all()
-			
+
+            results = session.query(func.count(RadiologyRecord.pacsimage) ,RadiologyRecord).filter( \
+            minimalStartDate <= RadiologyRecord.test_date <= today).filter(ilike("%" + keywords + "%")).all()
+
         else:
             results = session.query(RadiologyRecord).filter(
                 RadiologyRecord.test_type.ilike("%" + keywords + "%"))
