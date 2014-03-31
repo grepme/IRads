@@ -124,10 +124,12 @@ class IradsUpload(object):
         (u, c) = getUserInfo()
         if (id and radiologyimage.file):
             '''
-            Creates the necessary sizes of image
+            Creates the necessary sizes of image in JPG format
             and converts to a byte stream for storage in the database
             '''
-            image = Image.open(BytesIO(radiologyimage.file.read()))
+            orig_image = Image.open(BytesIO(radiologyimage.file.read()))
+            image = Image.new("RGB", orig_image.size, (255, 255, 255))
+            image.paste(orig_image)
             fullstream = BytesIO()
             image.save(fullstream, "JPEG")
             normalstream = BytesIO()

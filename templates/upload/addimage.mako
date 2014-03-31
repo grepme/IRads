@@ -14,7 +14,7 @@
       <form class="form-upload" role="form" action="/upload/postImage/${id}" method="POST" enctype="multipart/form-data">
         <h2 class="form-upload-heading">Choose a file:</h2>
         <input type="file" name="radiologyimage">
-        <p class="help-block">Choose a .jpg file to upload.</p>
+        <p class="help-block">Choose an image file to upload.</p>
         <button class="btn btn-lg btn-primary btn-block" type="submit">Upload</button>
       </form>
     </div>
