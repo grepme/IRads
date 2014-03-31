@@ -16,9 +16,9 @@
       <form role="form" action="/analysis/generate" method="POST">
 		<label for="datepicker">Date range</label>
         <div class="input-daterange input-group form-group" id="datepicker">
-          <input type="text" class="input-sm form-control" name="start" placeholder="YYYY-MM-DD" data-provide="datepicker" data-date-format="yyyy-mm-dd" data-date-today-btn="true" data-date-autoclose="true" data-date-today-highlight="true" required/>
+          <input type="text" class="input-sm form-control" name="start" placeholder="YYYY-MM-DD" data-provide="datepicker" data-date-format="yyyy-mm-dd" data-date-today-btn="true" data-date-autoclose="true" data-date-today-highlight="true"/>
           <span class="input-group-addon">to</span>
-          <input type="text" class="input-sm form-control" name="end" placeholder="YYYY-MM-DD" data-provide="datepicker" data-date-format="yyyy-mm-dd" data-date-today-btn="true" data-date-autoclose="true" data-date-today-highlight="true" required/>
+          <input type="text" class="input-sm form-control" name="end" placeholder="YYYY-MM-DD" data-provide="datepicker" data-date-format="yyyy-mm-dd" data-date-today-btn="true" data-date-autoclose="true" data-date-today-highlight="true"/>
 		  <span class="small">(if blank, will search all records)</span>
         </div>
         <div class="form-group">

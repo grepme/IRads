@@ -55,22 +55,27 @@ class IradsAnalysis(object):
         # Today
         today = datetime.date.today()
 
+		#Basic query
+		query = session.query(func.count(RadiologyRecord.pacsimage) ,RadiologyRecord)
+		
         # All edge cases are inclusive
-        if options != "all" or options is not None:
-            if options == "week":
-                minimalStartDate = today - datetime.date.today().weekday()
-            elif options == "month":
-                minimalStartDate = today - datetime.date.today().day
-            elif options == "year":
-                minimalStartDate = today - \
-                    datetime.timedelata(days=datetime.date.today().timetuple().tm_yday + 1)
-
-            results = session.query(func.count(RadiologyRecord.pacsimage) ,RadiologyRecord).filter( \
-            minimalStartDate <= RadiologyRecord.test_date <= today).filter(ilike("%" + keywords + "%")).all()
-
-        else:
-            results = session.query(RadiologyRecord).filter(
-                RadiologyRecord.test_type.ilike("%" + keywords + "%"))
+        if start is not None and end is not None:
+            #if options == "week":
+            #    minimalStartDate = today - datetime.date.today().weekday()
+            #elif options == "month":
+            #    minimalStartDate = today - datetime.date.today().day
+            #elif options == "year":
+            #    minimalStartDate = today - \
+            #        datetime.timedelata(days=datetime.date.today().timetuple().tm_yday + 1)
+			query = query.filter( \
+            start <= RadiologyRecord.test_date <= end)
+			
+		if testType != "_ALLTESTTYPES_":
+			query = query.filter(RadiologyRecord.test_type == testType)
+			
+		if 	patient != "_ALLPATIENTS_":
+			query = query.filter(RadiologyRecord.patient.person_id == patient)
+	
 
         (u, c) = getUserInfo()
 
