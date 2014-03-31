@@ -13,6 +13,7 @@
     <%include file="/navbars/navbar.mako" args="currentPage='analysis'"/>
  <div class="container content">
       <h2>Analysis Module <small>Results</small></h2>
+	  ${results}
       <table class="table table-bordered">
         <thead>
           <tr>
@@ -23,28 +24,11 @@
           </tr>
         </thead>
        <tbody>
+	   % for result in results:
         <tr>
-          <td rowspan="2">1</td>
-          <td>Mark</td>
-          <td>Otto</td>
-          <td>@mdo</td>
+          <td>${result[0].last_name}, ${result[0].first_name}</td>
         </tr>
-        <tr>
-          <td>Mark</td>
-          <td>Otto</td>
-          <td>@TwBootstrap</td>
-        </tr>
-        <tr>
-          <td>2</td>
-          <td>Jacob</td>
-          <td>Thornton</td>
-          <td>@fat</td>
-        </tr>
-        <tr>
-          <td>3</td>
-          <td colspan="2">Larry the Bird</td>
-          <td>@twitter</td>
-        </tr>
+		% endfor
       </tbody>
       </table>
 	  ${str(results)}
