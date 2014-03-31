@@ -1,6 +1,7 @@
 import cherrypy
 from database.database import Database
 from database.mappings import *
+from sqlalchemy import func
 from helpers import *
 from mako.lookup import TemplateLookup
 import datetime
@@ -38,7 +39,7 @@ class IradsAnalysis(object):
 
     @cherrypy.expose
     @cherrypy.tools.protect(groups=['a'])
-    def generate(self, keywords, options, patient):
+    def generate(self, keywords=None, options=None, patient=None):
         """Returns a generated report for the analysis module"""
         template = self.lookup.get_template('analysis/generate.mako')
 
@@ -50,7 +51,7 @@ class IradsAnalysis(object):
         today = datetime.date.today()
 
         # All edge cases are inclusive
-        if options != "all":
+        if options != "all" or options != None:
             if options == "week":
                 minimalStartDate = today - datetime.date.today().weekday()
             elif options == "month":
@@ -58,6 +59,10 @@ class IradsAnalysis(object):
             elif options == "year":
                 minimalStartDate = today - \
                     datetime.date.today().timetuple().tm_yday
+			
+			results = session.query(func.count(RadiologyRecord.pacsimage) ,RadiologyRecord).filter( \
+			minimalStartDate <= RadiologyRecord.test_date <= today).ilike("%" + keywords + "%")).all()
+			
         else:
             results = session.query(RadiologyRecord).filter(
                 RadiologyRecord.test_type.ilike("%" + keywords + "%"))
