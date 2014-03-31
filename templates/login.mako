@@ -19,7 +19,7 @@
     % elif loginStatus==3:
   <p class="lead">You are not logged in.</p>
     % endif
-    <p class="lead"><a href="/doc" target="_blank">Documentation</a></p>
+    <p class="lead"><a href="/docs/index.html" target="_blank">Documentation</a></p>
     </div>
 
 <%include file="/footer.mako"/>

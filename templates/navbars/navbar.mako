@@ -40,7 +40,7 @@
              ><a href="/search">Search</a></li>
           </ul>
           <ul class="nav navbar-nav navbar-right">
-          <li><a href="/doc" target="_blank">Documentation</a></li>
+          <li><a href="/docs/index.html" target="_blank">Documentation</a></li>
             <li><a href="/user">Logged in as: ${username}</a></li>
             <li
             % if currentPage == 'user':

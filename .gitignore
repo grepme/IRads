@@ -3,3 +3,5 @@
 sftp-config.json
 *.pyc
 config.py
+docs
+doc/_build

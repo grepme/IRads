@@ -30,8 +30,8 @@ def main():
                   },
             '/css':
            {'tools.staticdir.on': True, 'tools.staticdir.dir': 'css'},
-            '/doc':
-           {'tools.staticdir.on': True, 'tools.staticdir.dir': 'doc'},
+            '/docs':
+           {'tools.staticdir.on': True, 'tools.staticdir.dir': 'docs/html'},
             '/js':
            {'tools.staticdir.on': True, 'tools.staticdir.dir': 'js'}}
 
