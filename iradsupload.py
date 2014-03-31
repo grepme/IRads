@@ -9,6 +9,10 @@ from PIL import Image
 
 class IradsUpload(object):
 
+    """Reponsible for uploading radiology records and for uploading
+    images to radiology records previosly entered into the system.
+    """
+
     database = None
     lookup = TemplateLookup(directories=['templates'])
 
@@ -18,6 +22,7 @@ class IradsUpload(object):
     @cherrypy.expose
     @cherrypy.tools.protect(groups=['r'])
     def index(self):
+        """Returns a page that prompts to select to add a record or image."""
         template = self.lookup.get_template('upload/upload.mako')
         (u, c) = getUserInfo()
         return template.render(username=u, classtype=c)
@@ -25,7 +30,11 @@ class IradsUpload(object):
     @cherrypy.expose
     @cherrypy.tools.protect(groups=['r'])
     def selectRecord(self):
-        global database
+        """Returns a page with a list of records from which one can
+        be chosed to have images uploaded to it.
+
+        Only records belonging to the current user are displayed.
+        """
         template = self.lookup.get_template('upload/selectrecord.mako')
         (u, c) = getUserInfo()
         session = self.database.get()
@@ -44,14 +53,19 @@ class IradsUpload(object):
     @cherrypy.expose
     @cherrypy.tools.protect(groups=['r'])
     def addRecord(self):
+        """Returns a page that allows for the input of a radiology record
+        into the system.
+        """
         template = self.lookup.get_template('upload/addrecord.mako')
         (u, c) = getUserInfo()
         session = self.database.get()
         patients = []
         doctors = []
+        # Get a list of all patients
         for entry in session.query(User).filter(User.class_type == 'p').all():
             if (entry.person.__dict__ not in patients):
                 patients.append(entry.person.__dict__)
+        # Get a list of all doctors
         for entry in session.query(User).filter(User.class_type == 'd').all():
             if (entry.person.__dict__ not in doctors):
                 doctors.append(entry.person.__dict__)
@@ -73,6 +87,7 @@ class IradsUpload(object):
     def postRecord(self, patient=None, doctor=None, test_type=None,
                    test_date=None, prescribing_date=None, diagnosis=None,
                    description=None):
+        """Adds a record to the system and returns a page with the result."""
         template = self.lookup.get_template('upload/upload.mako')
         (u, c) = getUserInfo()
         if (patient and doctor and test_type and test_date and prescribing_date
@@ -94,6 +109,8 @@ class IradsUpload(object):
     @cherrypy.expose
     @cherrypy.tools.protect(groups=['r'])
     def selectImage(self, id):
+        """Returns a page that allows the selection of an image to be uploaded.
+        """
         template = self.lookup.get_template('upload/addimage.mako')
         (u, c) = getUserInfo()
         return template.render(username=u, classtype=c, id=id)
@@ -101,9 +118,15 @@ class IradsUpload(object):
     @cherrypy.expose
     @cherrypy.tools.protect(groups=['r'])
     def postImage(self, id=None, radiologyimage=None):
+        """Uploads an image to the system and returns a page with the result.
+        """
         template = self.lookup.get_template('upload/upload.mako')
         (u, c) = getUserInfo()
         if (id and radiologyimage.file):
+            '''
+            Creates the necessary sizes of image
+            and converts to a byte stream for storage in the database
+            '''
             image = Image.open(BytesIO(radiologyimage.file.read()))
             fullstream = BytesIO()
             image.save(fullstream, "JPEG")
