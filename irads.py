@@ -20,7 +20,10 @@ class Irads(object):
 
     @cherrypy.expose
     def index(self, username=None, password=None):
-        """Returns a login page"""
+        """Returns a login page, and responsible for verifying
+        the provided login information and accepting or rejecting
+        it accordingly.
+        """
         global database
         template = self.lookup.get_template('login.mako')
         if username and password:
@@ -54,7 +57,11 @@ class Irads(object):
     def user(self, firstname=None, lastname=None,
              address=None, email=None, phone=None,
              password=None, password2=None):
-        """Returns a page to edit a user's own information"""
+        """Returns a page to edit a user's own information.
+
+        If new information was passed on to it, it verifies it and
+        edits accordingly.
+        """
         template = self.lookup.get_template('user.mako')
         (u, c) = getUserInfo()
         session = self.database.get()
