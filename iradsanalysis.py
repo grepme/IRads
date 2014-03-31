@@ -1,7 +1,7 @@
 import cherrypy
 from database.database import Database
 from database.mappings import *
-from sqlalchemy import func
+from sqlalchemy import func, distinct
 from helpers import *
 from mako.lookup import TemplateLookup
 import datetime
@@ -26,20 +26,25 @@ class IradsAnalysis(object):
 
         # Get a list of all patients
         patients = []
+		testTypes = []
         for entry in session.query(User).filter(User.class_type == 'p').all():
             if (entry.person.__dict__ not in patients):
                 patients.append(entry.person.__dict__)
+				
+        for entry in session.query(RadiologyRecord).filter(distinct(RadiologyRecord.test_type)).all():
+            if (entry.test_type not in testTypes):
+                testTypes.append(entry.test_type)
 
         template = self.lookup.get_template('analysis/analysis.mako')
         (u, c) = getUserInfo()
 
         conn.close()
 
-        return template.render(username=u, classtype=c, patients=patients)
+        return template.render(username=u, classtype=c, patients=patients, testTypes=testTypes)
 
     @cherrypy.expose
     @cherrypy.tools.protect(groups=['a'])
-    def generate(self, keywords=None, options=None, patient=None):
+    def generate(self, keywords=None, options=None, patient=None, testType=None):
         """Returns a generated report for the analysis module"""
         template = self.lookup.get_template('analysis/generate.mako')
 
@@ -58,7 +63,7 @@ class IradsAnalysis(object):
                 minimalStartDate = today - datetime.date.today().day
             elif options == "year":
                 minimalStartDate = today - \
-                    datetime.date.today().timetuple().tm_yday
+                    datetime.timedelata(days=datetime.date.today().timetuple().tm_yday + 1)
 			
 			results = session.query(func.count(RadiologyRecord.pacsimage) ,RadiologyRecord).filter( \
 			minimalStartDate <= RadiologyRecord.test_date <= today).ilike("%" + keywords + "%")).all()

@@ -14,24 +14,15 @@
  <div class="container content">
       <h2>Analysis Module <small>Enter criteria:</small></h2>
       <form role="form" action="/analysis/generate" method="POST">
-        <div class="btn-group" data-toggle="buttons">
-         <label class="btn btn-primary">
-           <input type="radio" name="options" id="option1" value="week"> Week
-         </label>
-         <label class="btn btn-primary">
-           <input type="radio" name="options" id="option2" value="month"> Month
-         </label>
-         <label class="btn btn-primary">
-           <input type="radio" name="options" id="option3" value="year"> Year
-         </label>
-         <label class="btn btn-primary">
-           <input type="radio" name="options" id="option3" value="all"> All Time
-         </label>
-       </div>
-       <div class="form-group">
-          <label for="keywords">Test Type</label>
-          <input type="text" class="form-control" name="keywords" placeholder="Enter test type" />
-       </div>
+        <div class="form-group">
+          <label for="patient">Test Type</label>
+          <select name="testType" class="form-control">
+		    <option value="_ALLTESTTYPES_">All Test Types</option>
+          % for test_type in testTypes:
+            <option value="${test_type}">${test_type}</option>
+          % endfor
+          </select>
+        </div>
         <div class="form-group">
           <label for="patient">Patient</label>
           <select name="patient" class="form-control">
