@@ -37,6 +37,10 @@
 		% endfor
       </tbody>
       </table>
+	  <p>Year 
+		<button type="button" class="btn btn-primary">Increase</button>
+		<button type="button" class="btn btn-danger">Decrease</button>
+	  </p>
     </div>
   </div>
 <%include file="/footer.mako"/>
