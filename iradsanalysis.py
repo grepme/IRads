@@ -56,7 +56,7 @@ class IradsAnalysis(object):
         today = datetime.date.today()
 
         # All edge cases are inclusive
-        if options != "all" or options != None:
+        if options != "all" or options is not None:
             if options == "week":
                 minimalStartDate = today - datetime.date.today().weekday()
             elif options == "month":
