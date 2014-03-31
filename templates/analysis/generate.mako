@@ -38,7 +38,6 @@
 		% endfor
       </tbody>
       </table>
-	  ${str(results)}
     </div>
   </div>
 <%include file="/footer.mako"/>
