@@ -89,7 +89,8 @@ class RadiologyRecord(Base):
                           backref="radiologyrecords_doctor")
     patient = relationship("Person",
                            foreign_keys=[patient_id],
-                           backref="radiologyrecords")
+                           backref="radiologyrecords",
+                           lazy="joined")
     radiologist = relationship("Person",
                                foreign_keys=[radiologist_id],
                                backref="radiologyrecords_radiologist")
