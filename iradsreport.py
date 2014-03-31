@@ -6,6 +6,10 @@ from mako.lookup import TemplateLookup
 
 class IradsReport(object):
 
+    """Responsible for producing a list of all patients with a specified
+    diagnosis for a given time period.
+    """
+
     database = None
     lookup = TemplateLookup(directories=['templates'])
 
@@ -15,6 +19,9 @@ class IradsReport(object):
     @cherrypy.expose
     @cherrypy.tools.protect(groups=['a'])
     def index(self):
+        """Returns the main page that allows for the input of
+        the parameters the user wants to search by.
+        """
         template = self.lookup.get_template('report/report.mako')
         (u, c) = getUserInfo()
         return template.render(username=u, classtype=c)
@@ -22,6 +29,9 @@ class IradsReport(object):
     @cherrypy.expose
     @cherrypy.tools.protect(groups=['a'])
     def search(self, start=None, end=None, diagnosis=None):
+        """Validates the parameters, search the database, and
+        returns the results or an error message page.
+        """
         template = self.lookup.get_template('report/results.mako')
         (u, c) = getUserInfo()
         if start and end and diagnosis:
