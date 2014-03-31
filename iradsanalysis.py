@@ -73,8 +73,18 @@ class IradsAnalysis(object):
         #    if entry.__dict__ not in results:
         #        results.append(entry.__dict__)
 
+		patients = []
+        testTypes = []
+        for entry in session.query(User).filter(User.class_type == 'p').all():
+            if (entry.person.__dict__ not in patients):
+                patients.append(entry.person.__dict__)
+
+        for entry in session.query(RadiologyRecord).distinct().all():
+            if (entry.test_type not in testTypes):
+                testTypes.append(entry.test_type)
+		
         (u, c) = getUserInfo()
 
         conn.close()
 
-        return template.render(username=u, classtype=c, results=results)
+        return template.render(username=u, classtype=c, results=results, patients=patients, testTypes=testTypes)

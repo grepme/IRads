@@ -13,6 +13,40 @@
     <%include file="/navbars/navbar.mako" args="currentPage='analysis'"/>
  <div class="container content">
       <h2>Analysis Module <small>Results</small></h2>
+      <table class="table table-bordered">
+        <thead>
+          <tr>
+            <th>Patient's Name</th>
+            % for test in testTypes:
+			  <th>${test}</th>
+			% endfor
+          </tr>
+        </thead>
+       <tbody>
+        <tr>
+          <td rowspan="2">1</td>
+          <td>Mark</td>
+          <td>Otto</td>
+          <td>@mdo</td>
+        </tr>
+        <tr>
+          <td>Mark</td>
+          <td>Otto</td>
+          <td>@TwBootstrap</td>
+        </tr>
+        <tr>
+          <td>2</td>
+          <td>Jacob</td>
+          <td>Thornton</td>
+          <td>@fat</td>
+        </tr>
+        <tr>
+          <td>3</td>
+          <td colspan="2">Larry the Bird</td>
+          <td>@twitter</td>
+        </tr>
+      </tbody>
+      </table>
 	  ${str(results)}
     </div>
   </div>
