@@ -55,9 +55,9 @@ class IradsAnalysis(object):
         # Today
         today = datetime.date.today()
 
-		#Basic query
-		query = session.query(func.count(RadiologyRecord.pacsimage) ,RadiologyRecord)
-		
+        #Basic query
+        query = session.query(func.count(RadiologyRecord.pacsimage) ,RadiologyRecord)
+
         # All edge cases are inclusive
         if start is not None and end is not None:
             #if options == "week":
@@ -67,17 +67,17 @@ class IradsAnalysis(object):
             #elif options == "year":
             #    minimalStartDate = today - \
             #        datetime.timedelata(days=datetime.date.today().timetuple().tm_yday + 1)
-			query = query.filter( \
+            query = query.filter( \
             start <= RadiologyRecord.test_date <= end)
-			
-		if testType != "_ALLTESTTYPES_":
-			query = query.filter(RadiologyRecord.test_type == testType)
-			
-		if 	patient != "_ALLPATIENTS_":
-			query = query.filter(RadiologyRecord.patient.person_id == patient)
-	
-		results = query.all()
-		
+
+        if testType != "_ALLTESTTYPES_":
+            query = query.filter(RadiologyRecord.test_type == testType)
+
+        if  patient != "_ALLPATIENTS_":
+            query = query.filter(RadiologyRecord.patient.person_id == patient)
+
+        results = query.all()
+
         (u, c) = getUserInfo()
 
         conn.close()
