@@ -44,7 +44,7 @@ class IradsAnalysis(object):
 
     @cherrypy.expose
     @cherrypy.tools.protect(groups=['a'])
-    def generate(self, keywords=None, options=None, patient=None, testType=None):
+    def generate(self, start=None, end=None, patient=None, testType=None):
         """Returns a generated report for the analysis module"""
         template = self.lookup.get_template('analysis/generate.mako')
 
