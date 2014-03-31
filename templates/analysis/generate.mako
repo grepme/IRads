@@ -27,7 +27,14 @@
 	   % for result in results:
         <tr>
           <td>${result[0].patient.last_name}, ${result[0].patient.first_name}</td>
-		  <td>${result[0]}
+            % for test in testTypes:
+			  % if test == result[0].test_type:
+			    <td>${result[2]}</td>
+			  % else:
+			    <td></td>
+			  % endif
+			% endfor
+		  <td>${result[0]}</td>
         </tr>
 		% endfor
       </tbody>
