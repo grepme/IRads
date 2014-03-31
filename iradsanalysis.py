@@ -53,8 +53,8 @@ class IradsAnalysis(object):
         session = conn.get()
 
         #Basic query
-        query = session.query(RadiologyRecord).join(PacsImage, RadiologyRecord.record_id == PacsImage.record_id).join(Person, RadiologyRecord.patient_id == Person.person_id)
-
+        #query = session.query(RadiologyRecord).join(PacsImage, RadiologyRecord.record_id == PacsImage.record_id).join(Person, RadiologyRecord.patient_id == Person.person_id)
+        query = session.query(RadiologyRecord, func.count(PacsImage.record_id).label('total')).join(PacsImage).group_by(RadiologyRecord).order_by('total DESC')
         # All edge cases are inclusive
         #if (start is not None) and (end is not None):
         #    query = query.filter(
