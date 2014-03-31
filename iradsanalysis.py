@@ -65,7 +65,7 @@ class IradsAnalysis(object):
             query = query.filter(RadiologyRecord.test_type == testType)
 
         if patient != "_ALLPATIENTS_":
-            query = query.join(Person).filter(RadiologyRecord.patient_id == patient)
+            query = query.filter(RadiologyRecord.patient_id == patient)
 
         results = query.all()
         #results = []
