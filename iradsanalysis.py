@@ -1,10 +1,9 @@
 import cherrypy
 from database.database import Database
 from database.mappings import *
-from sqlalchemy import func, distinct
+from sqlalchemy import func
 from helpers import *
 from mako.lookup import TemplateLookup
-import datetime
 
 
 class IradsAnalysis(object):
@@ -40,7 +39,8 @@ class IradsAnalysis(object):
 
         conn.close()
 
-        return template.render(username=u, classtype=c, patients=patients, testTypes=testTypes)
+        return template.render(
+            username=u, classtype=c, patients=patients, testTypes=testTypes)
 
     @cherrypy.expose
     @cherrypy.tools.protect(groups=['a'])
@@ -52,31 +52,25 @@ class IradsAnalysis(object):
         conn = Database()
         session = conn.get()
 
-        # Today
-        today = datetime.date.today()
-
         #Basic query
-        query = session.query(func.count(RadiologyRecord.pacsimage) ,RadiologyRecord)
+        query = session.query(RadiologyRecord).join(PacsImage, RadiologyRecord.record_id == PacsImage.record_id).join(Person, RadiologyRecord.patient_id == Person.person_id)
 
         # All edge cases are inclusive
-        if start is not None and end is not None:
-            #if options == "week":
-            #    minimalStartDate = today - datetime.date.today().weekday()
-            #elif options == "month":
-            #    minimalStartDate = today - datetime.date.today().day
-            #elif options == "year":
-            #    minimalStartDate = today - \
-            #        datetime.timedelata(days=datetime.date.today().timetuple().tm_yday + 1)
-            query = query.filter( \
-            start <= RadiologyRecord.test_date <= end)
+        #if (start is not None) and (end is not None):
+        #    query = query.filter(
+        #        RadiologyRecord.test_date <= end).filter(
+        #            RadiologyRecord.test_date >= start)
 
         if testType != "_ALLTESTTYPES_":
             query = query.filter(RadiologyRecord.test_type == testType)
 
-        if  patient != "_ALLPATIENTS_":
+        if patient != "_ALLPATIENTS_":
             query = query.filter(RadiologyRecord.patient.person_id == patient)
 
-        results = query.all()
+        results = []
+        for entry in query.all():
+            if entry.__dict__ not in results:
+                results.append(entry.__dict__)
 
         (u, c) = getUserInfo()
 

@@ -108,4 +108,4 @@ class PacsImage(Base):
     full_size = Column(LargeBinary)
 
     # Relationships
-    doctor = relationship("RadiologyRecord", backref="pacsimage")
+    record = relationship("RadiologyRecord", backref="pacsimage")
