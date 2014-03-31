@@ -61,8 +61,15 @@ class IradsAnalysis(object):
         #        RadiologyRecord.test_date <= end).filter(
         #            RadiologyRecord.test_date >= start)
 
+        testTypes = []
+
         if testType != "_ALLTESTTYPES_":
             query = query.filter(RadiologyRecord.test_type == testType)
+            testTypes.append(testType)
+        else:
+            for entry in session.query(RadiologyRecord).distinct().all():
+                if (entry.test_type not in testTypes):
+                    testTypes.append(entry.test_type)
 
         if patient != "_ALLPATIENTS_":
             query = query.filter(RadiologyRecord.patient_id == patient)
@@ -73,18 +80,9 @@ class IradsAnalysis(object):
         #    if entry.__dict__ not in results:
         #        results.append(entry.__dict__)
 
-		patients = []
-        testTypes = []
-        for entry in session.query(User).filter(User.class_type == 'p').all():
-            if (entry.person.__dict__ not in patients):
-                patients.append(entry.person.__dict__)
-
-        for entry in session.query(RadiologyRecord).distinct().all():
-            if (entry.test_type not in testTypes):
-                testTypes.append(entry.test_type)
-		
         (u, c) = getUserInfo()
 
         conn.close()
 
-        return template.render(username=u, classtype=c, results=results, patients=patients, testTypes=testTypes)
+        return template.render(
+            username=u, classtype=c, results=results, testTypes=testTypes)
