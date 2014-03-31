@@ -5,7 +5,7 @@ Installation
 System Requirements
 -------------------
 
-* `Python 2, 2.6+ <https://www.python.org/>`_
+* `Python 2 (2.6+) <https://www.python.org/>`_
     * If you don't currently have Python installed on your system, the `Python documentation <http://docs.python.org/2/>`_ contains installation instructions for all major operating systems.
 
 * `MySQL <http://www.mysql.com/>`_
@@ -18,8 +18,7 @@ System Requirements
     * Installation via pip: ``pip install Mako``
 
 * `Pillow <http://python-imaging.github.io/>`_
-    * Installation via pip: ``pip install Pillow``
-    * Pillow also requires `libjpeg <http://libjpeg.sourceforge.net/>`_, see the `Pillow documentation <https://github.com/python-imaging/Pillow/blob/master/docs/installation.rst>`_ for more details on its prerequisites.
+    * Read the `documentation <http://pillow.readthedocs.org/en/latest/installation.html>`_ on how to install as Pillow requires various pre-requisites (for this application, at minimum `libjpeg <http://libjpeg.sourceforge.net/>`_, is required)
 
 * `SQLAlchemy <http://www.sqlalchemy.org/>`_
     * Installation via pip: ``pip install SQLAlchemy``
