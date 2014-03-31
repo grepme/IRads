@@ -30,6 +30,9 @@ class IradsAnalysis(object):
 		
         template = self.lookup.get_template('analysis/analysis.mako')
         (u, c) = getUserInfo()
+		
+		conn.close()
+		
         return template.render(username=u, classtype=c, patients=patients)
 
     @cherrypy.expose
@@ -38,7 +41,11 @@ class IradsAnalysis(object):
         """Returns a generated report for the analysis module"""
         template = self.lookup.get_template('analysis/generate.mako')
 		
-		session = database.get()
+		#Database connection
+		conn = Database()
+		session = Database.get()
+		
+		#Today
 		today = datetime.date.today()
 		
 		#All edge cases are inclusive
@@ -53,8 +60,8 @@ class IradsAnalysis(object):
 			results = session.query(RadiologyRecord).filter(
 				RadiologyRecord.test_type.ilike("%" + keywords + "%" ))
 			
-		
-		
-		
 		(u, c) = getUserInfo()
+		
+		conn.close()
+		
         return template.render(username=u, classtype=c, results=results)
