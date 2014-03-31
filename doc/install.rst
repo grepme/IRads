@@ -12,10 +12,14 @@ System Requirements
     * See the `MySQL documentation <http://dev.mysql.com/doc/refman/5.6/en/installing.html>`_ for installation instructions.
 
 * `CherryPy <http://www.cherrypy.org/>`_
-    * Easiest installed with `pip <https://pypi.python.org/pypi/pip>`_ (if needed, follow that link for installation instructions). Using pip, simply run ``pip install CherryPy`` or read the `CherryPy documentation <http://docs.cherrypy.org/en/latest/>`_ for more detailed instructions.
+    * Easiest installed with `pip <https://pypi.python.org/pypi/pip>`_ (if needed, follow that link for installation instructions). Using pip, simply run ``pip install CherryPy``
 
 * `Mako Templates <http://www.makotemplates.org/>`_
     * Installation via pip: ``pip install Mako``
+
+* `Pillow <http://python-imaging.github.io/>`_
+    * Installation via pip: ``pip install Pillow``
+    * Pillow also requires `libjpeg <http://libjpeg.sourceforge.net/>`_, see the `Pillow documentation <https://github.com/python-imaging/Pillow/blob/master/docs/installation.rst>`_ for more details on its prerequisites.
 
 * `SQLAlchemy <http://www.sqlalchemy.org/>`_
     * Installation via pip: ``pip install SQLAlchemy``
