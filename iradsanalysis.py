@@ -51,18 +51,16 @@ class IradsAnalysis(object):
         today = datetime.date.today()
 
         # All edge cases are inclusive
-        if options != "all" or options != None:
+        if options != "all" or options is not None:
             if options == "week":
                 minimalStartDate = today - datetime.date.today().weekday()
             elif options == "month":
                 minimalStartDate = today - datetime.date.today().day
             elif options == "year":
-                minimalStartDate = today - \
-                    datetime.date.today().timetuple().tm_yday
-			
-			results = session.query(func.count(RadiologyRecord.pacsimage) ,RadiologyRecord).filter( \
-			minimalStartDate <= RadiologyRecord.test_date <= today).ilike("%" + keywords + "%")).all()
-			
+                minimalStartDate = today - datetime.date.today().timetuple().tm_yday
+            results = session.query(func.count(
+                RadiologyRecord.pacsimage) ,RadiologyRecord).filter(minimalStartDate <= RadiologyRecord.test_date <= today).filter(ilike("%" + keywords + "%")).all()
+
         else:
             results = session.query(RadiologyRecord).filter(
                 RadiologyRecord.test_type.ilike("%" + keywords + "%"))
