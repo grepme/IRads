@@ -37,7 +37,7 @@ class Database():
         self.session.commit()
 
     def close(self):
-        self.session.remove()
+        self.session.close()
 
     # Commit the transaction and remove the session
     def commitAndClose(self):

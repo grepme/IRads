@@ -1,5 +1,6 @@
 import cherrypy
 from cgi import escape
+from database.database import Database
 from database.mappings import *
 from helpers import *
 from mako.lookup import TemplateLookup
@@ -12,11 +13,7 @@ class Irads(object):
     access to all other modules.
     """
 
-    database = None
     lookup = TemplateLookup(directories=['templates'])
-
-    def __init__(self, database):
-        self.database = database
 
     @cherrypy.expose
     def index(self, username=None, password=None):
@@ -24,12 +21,12 @@ class Irads(object):
         the provided login information and accepting or rejecting
         it accordingly.
         """
-        global database
         template = self.lookup.get_template('login.mako')
         if username and password:
             username = escape(username, True)
             password = escape(password, True)
-            session = self.database.get()
+            conn = Database()
+            session = conn.get()
             try:
                 user = session.query(User).filter(
                     User.user_name == username).filter(
@@ -38,8 +35,10 @@ class Irads(object):
                 cherrypy.session['classtype'] = user.class_type
                 raise cherrypy.HTTPRedirect("/home")
             except NoResultFound:
+                conn.close()
                 return template.render(loginStatus=1)
             except MultipleResultsFound:
+                conn.close()
                 return template.render(loginStatus=1)
         else:
             return template.render(loginStatus=0)
@@ -64,7 +63,8 @@ class Irads(object):
         """
         template = self.lookup.get_template('user.mako')
         (u, c) = getUserInfo()
-        session = self.database.get()
+        conn = Database()
+        session = conn.get()
         user = session.query(User).filter(User.user_name == u).one()
         fail = False
         # make sure password was entered correctly
@@ -85,7 +85,7 @@ class Irads(object):
             user.person.phone = phone
         if firstname or lastname or address or email or phone or password:
             if not fail:
-                session.commit()
+                conn.commit()
                 user = session.query(User).filter(User.user_name == u).one()
         oldinfo = []
         oldinfo.append(user.person.first_name)
@@ -95,12 +95,15 @@ class Irads(object):
         oldinfo.append(user.person.phone)
         if firstname or lastname or address or email or phone or password:
             if fail:
+                conn.close()
                 return template.render(
                     username=u, classtype=c, oldinfo=oldinfo, action="nomatch")
             else:
+                conn.close()
                 return template.render(
                     username=u, classtype=c, oldinfo=oldinfo, action="success")
         else:
+            conn.close()
             return template.render(username=u, classtype=c, oldinfo=oldinfo)
 
     @cherrypy.expose

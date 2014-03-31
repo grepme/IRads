@@ -1,4 +1,5 @@
 import cherrypy
+from database.database import Database
 from database.mappings import *
 from helpers import *
 from mako.lookup import TemplateLookup
@@ -10,11 +11,7 @@ class IradsReport(object):
     diagnosis for a given time period.
     """
 
-    database = None
     lookup = TemplateLookup(directories=['templates'])
-
-    def __init__(self, database):
-        self.database = database
 
     @cherrypy.expose
     @cherrypy.tools.protect(groups=['a'])
@@ -35,20 +32,22 @@ class IradsReport(object):
         template = self.lookup.get_template('report/results.mako')
         (u, c) = getUserInfo()
         if start and end and diagnosis:
-            diagnosis = escape(diagnosis, True)
-            session = self.database.get()
+            conn = Database()
+            session = conn.get()
             results = []
-            # TODO split keyword to work with multiple words
-            for entry in session.query(
-                RadiologyRecord).filter(
-                    RadiologyRecord.test_date >= start,
-                    RadiologyRecord.test_date <= end,
+            query = session.query(RadiologyRecord).filter(
+                RadiologyRecord.test_date >= start,
+                RadiologyRecord.test_date <= end)
+            for word in diagnosis.split():
+                query = query.filter(
                     RadiologyRecord.diagnosis.ilike(
-                        "%" + diagnosis + "%")).all():
+                        "%" + word + "%"))
+            for entry in query.all():
                 results.append(
                     [entry.patient.last_name, entry.patient.first_name,
                      entry.patient.address, entry.patient.phone,
                      entry.test_date, entry.diagnosis])
+            conn.close()
             if (len(results) == 0):
                 template = self.lookup.get_template('report/report.mako')
                 return template.render(username=u, classtype=c, action="fail")

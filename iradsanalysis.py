@@ -1,4 +1,5 @@
 import cherrypy
+from database.database import Database
 from database.mappings import *
 from helpers import *
 from mako.lookup import TemplateLookup
@@ -8,11 +9,7 @@ class IradsAnalysis(object):
 
     """Responsible for the data analysis module."""
 
-    database = None
     lookup = TemplateLookup(directories=['templates'])
-
-    def __init__(self, database):
-        self.database = database
 
     @cherrypy.expose
     @cherrypy.tools.protect(groups=['a'])
