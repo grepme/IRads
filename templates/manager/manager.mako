@@ -20,7 +20,9 @@
       <h5><a href="/manager/addUser/0">Add a username for a person</a></h5>
       <h5><a href="/manager/listUser">View usernames and edit details</a></h5>
       <h5><a href="/manager/listDoctor">View and edit doctors' patients</a></h5>
-
+      % if action == "noDoctor":
+      <p class="lead">Error: no doctor selected.</p>
+      % endif
     </div>
 
 <%include file="/footer.mako"/>

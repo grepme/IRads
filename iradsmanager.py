@@ -1,5 +1,6 @@
 import cherrypy
 import time
+from database.database import Database
 from database.mappings import *
 from helpers import *
 from mako.lookup import TemplateLookup
@@ -12,11 +13,7 @@ class IradsManager(object):
     of users, people and family doctors.
     """
 
-    database = None
     lookup = TemplateLookup(directories=['templates'])
-
-    def __init__(self, database):
-        self.database = database
 
     @cherrypy.expose
     @cherrypy.tools.protect(groups=['a'])
@@ -38,12 +35,13 @@ class IradsManager(object):
         template = self.lookup.get_template('manager/addperson.mako')
         (u, c) = getUserInfo()
         if firstname:
-            session = self.database.get()
+            conn = Database()
+            session = conn.get()
             person = Person(
                 first_name=firstname, last_name=lastname,
                 address=address, email=email, phone=phone)
             session.add(person)
-            session.commit()
+            conn.CAC()
             return template.render(username=u, classtype=c, action=True)
         else:
             return template.render(username=u, classtype=c)
@@ -57,7 +55,8 @@ class IradsManager(object):
         """
         template = self.lookup.get_template('manager/editperson.mako')
         (u, c) = getUserInfo()
-        session = self.database.get()
+        conn = Database()
+        session = conn.get()
         person = session.query(Person).filter(Person.person_id == id).one()
         if firstname:
             person.first_name = firstname
@@ -70,26 +69,38 @@ class IradsManager(object):
         if phone:
             person.phone = phone
         if firstname or lastname or address or email or phone:
-            session.commit()
+            conn.commit()
             person = session.query(Person).filter(Person.person_id == id).one()
+            conn.close()
             return template.render(
                 username=u, classtype=c, person=person.__dict__, action=True)
         else:
+            conn.close()
             return template.render(
                 username=u, classtype=c, person=person.__dict__)
 
     @cherrypy.expose
     @cherrypy.tools.protect(groups=['a'])
-    def listPerson(self):
+    def listPerson(self, delete=None, deleteId=None):
         """Returns a page with a list of persons, from which
         one can be selected for editing of their information.
+
+        Also allows for removal of persons.
         """
         template = self.lookup.get_template('manager/listperson.mako')
         (u, c) = getUserInfo()
-        session = self.database.get()
+        conn = Database()
+        session = conn.get()
         persons = []
+        if delete and deleteId:
+            session.query(Person).filter(
+                Person.person_id == deleteId).delete()
+            session.query(User).filter(
+                User.person_id == deleteId).delete()
+            conn.commit()
         for entry in session.query(Person).order_by(Person.last_name).all():
             persons.append(entry.__dict__)
+        conn.close()
         return template.render(username=u, classtype=c, persons=persons)
 
     @cherrypy.expose
@@ -102,7 +113,8 @@ class IradsManager(object):
         """
         template = self.lookup.get_template('manager/adduser.mako')
         (u, c) = getUserInfo()
-        session = self.database.get()
+        conn = Database()
+        session = conn.get()
         persons = []
         for entry in session.query(Person).order_by(Person.last_name).all():
             persons.append(
@@ -114,15 +126,17 @@ class IradsManager(object):
                             class_type=classtype, person_id=id,
                             date_registered=date)
                 session.add(user)
-                session.commit()
+                conn.CAC()
                 return template.render(
                     username=u, classtype=c, persons=persons,
                     preset=int(preset), action="success")
             except IntegrityError:
+                conn.close()
                 return template.render(
                     username=u, classtype=c, persons=persons,
                     preset=int(preset), action="exists")
         else:
+            conn.close()
             return template.render(
                 username=u, classtype=c, persons=persons, preset=int(preset))
 
@@ -137,7 +151,8 @@ class IradsManager(object):
         """
         template = self.lookup.get_template('manager/edituser.mako')
         (u, c) = getUserInfo()
-        session = self.database.get()
+        conn = Database()
+        session = conn.get()
         user = session.query(User).filter(User.user_name == userToEdit).one()
         fail = False
         if password or password2:
@@ -147,9 +162,10 @@ class IradsManager(object):
                 fail = True
         if password:
             if not fail:
-                session.commit()
+                conn.commit()
             user = session.query(User).filter(
                 User.user_name == userToEdit).one()
+            conn.close()
             if fail:
                 return template.render(username=u, classtype=c,
                                        user=user.__dict__, action="nomatch")
@@ -157,21 +173,30 @@ class IradsManager(object):
                 return template.render(username=u, classtype=c,
                                        user=user.__dict__, action="success")
         else:
+            conn.close()
             return template.render(
                 username=u, classtype=c, user=user.__dict__)
 
     @cherrypy.expose
     @cherrypy.tools.protect(groups=['a'])
-    def listUser(self):
+    def listUser(self, delete=None, deleteId=None):
         """Returns a page with a list of users, from which one can be
         selected for editing.
+
+        Also allows for deletion of users.
         """
         template = self.lookup.get_template('manager/listuser.mako')
         (u, c) = getUserInfo()
-        session = self.database.get()
+        conn = Database()
+        session = conn.get()
         users = []
+        if delete and deleteId:
+            session.query(User).filter(
+                User.user_name == deleteId).delete()
+            conn.commit()
         for entry in session.query(User).order_by(User.user_name).all():
             users.append(entry.__dict__)
+        conn.close()
         return template.render(username=u, classtype=c, users=users)
 
     @cherrypy.expose
@@ -182,10 +207,53 @@ class IradsManager(object):
         """
         template = self.lookup.get_template('manager/listdoctor.mako')
         (u, c) = getUserInfo()
-        session = self.database.get()
+        conn = Database()
+        session = conn.get()
         doctors = []
         for entry in session.query(
                 User).filter(User.class_type == 'd').all():
             if entry.person.__dict__ not in doctors:
                 doctors.append(entry.person.__dict__)
+        conn.close()
         return template.render(username=u, classtype=c, doctors=doctors)
+
+    @cherrypy.expose
+    @cherrypy.tools.protect(groups=['a'])
+    def editDoctor(self, doctor=None, remove=None, removeId=None, addId=None):
+        """Returns a page that lists all the patients currently under
+        a family doctor, and allows for adding and removing of patients.
+        """
+        if doctor is None:
+            template = self.lookup.get_template('manager/manager.mako')
+            (u, c) = getUserInfo()
+            return template.render(username=u, classtype=c, action="noDoctor")
+        template = self.lookup.get_template('manager/editdoctor.mako')
+        (u, c) = getUserInfo()
+        conn = Database()
+        session = conn.get()
+        if remove and removeId:
+            session.query(FamilyDoctor).filter(
+                FamilyDoctor.doctor_id == doctor).filter(
+                    FamilyDoctor.patient_id == removeId).delete()
+        if addId:
+            familyDoctor = FamilyDoctor(doctor_id=doctor, patient_id=addId)
+            session.add(familyDoctor)
+        conn.commit()
+        patients = []
+        for entry in session.query(
+            FamilyDoctor).filter(
+                FamilyDoctor.doctor_id == doctor).all():
+            if ((entry.patient is not None) and
+                    (entry.patient.__dict__ not in patients)):
+                patients.append(entry.patient.__dict__)
+        people = []
+        for entry in session.query(User).filter(User.class_type == 'p').all():
+            if ((entry.person.__dict__ not in people) and
+                    len(session.query(FamilyDoctor).filter(
+                        FamilyDoctor.doctor_id == doctor).filter(
+                            FamilyDoctor.patient_id == entry.person.person_id).all()) == 0):
+                people.append(entry.person.__dict__)
+        conn.close()
+        return template.render(
+            username=u, classtype=c, doctor=doctor, patients=patients,
+            people=people)

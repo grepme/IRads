@@ -12,8 +12,9 @@ pacs_images(record_id,image_id,thumbnail,regular_size,full_size)
 '''
 
 from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy import Column, Integer, String, Date, LargeBinary
+from sqlalchemy import Column, Integer, String, Date
 from sqlalchemy import ForeignKey
+from sqlalchemy.dialects.mysql import LONGBLOB
 from sqlalchemy.orm import relationship
 
 Base = declarative_base()
@@ -64,9 +65,9 @@ class FamilyDoctor(Base):
 
     # Relationships
     doctor = relationship("Person",
-                          foreign_keys=[doctor_id], backref="caresFor")
+                          foreign_keys=[doctor_id], backref="patient")
     patient = relationship("Person",
-                           foreign_keys=[patient_id], backref="patient")
+                           foreign_keys=[patient_id], backref="doctor")
 
 
 # To store the radiology record
@@ -104,9 +105,9 @@ class PacsImage(Base):
                        ForeignKey('radiology_record.record_id'),
                        primary_key=True)
     image_id = Column(Integer, primary_key=True)
-    thumbnail = Column(LargeBinary)
-    regular_size = Column(LargeBinary)
-    full_size = Column(LargeBinary)
+    thumbnail = Column(LONGBLOB)
+    regular_size = Column(LONGBLOB)
+    full_size = Column(LONGBLOB)
 
     # Relationships
     record = relationship("RadiologyRecord", backref="pacsimage")

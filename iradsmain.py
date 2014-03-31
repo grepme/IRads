@@ -46,12 +46,12 @@ def main():
         config.DATABASE_HOSTNAME, config.DATABASE)
 
     # Set up CherryPy mapping
-    Mapping = Irads(database)
-    Mapping.analysis = IradsAnalysis(database)
-    Mapping.manager = IradsManager(database)
-    Mapping.report = IradsReport(database)
-    Mapping.search = IradsSearch(database)
-    Mapping.upload = IradsUpload(database)
+    Mapping = Irads()
+    Mapping.analysis = IradsAnalysis()
+    Mapping.manager = IradsManager()
+    Mapping.report = IradsReport()
+    Mapping.search = IradsSearch()
+    Mapping.upload = IradsUpload()
 
     # Start
     cherrypy.quickstart(Mapping, '/', config=conf)

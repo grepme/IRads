@@ -1,5 +1,6 @@
 import base64
 import cherrypy
+from database.database import Database
 from database.mappings import *
 from helpers import *
 from mako.lookup import TemplateLookup
@@ -12,11 +13,7 @@ class IradsSearch(object):
     records based on search paramenters and user's class security level.
     """
 
-    database = None
     lookup = TemplateLookup(directories=['templates'])
-
-    def __init__(self, database):
-        self.database = database
 
     @cherrypy.expose
     @cherrypy.tools.protect()
@@ -39,7 +36,8 @@ class IradsSearch(object):
         if not ((start and end and sort) or (keywords and sort)):
             template = self.lookup.get_template('search/search.mako')
             return template.render(username=u, classtype=c, action="noparams")
-        session = self.database.get()
+        conn = Database()
+        session = conn.get()
         user = session.query(User).filter(User.user_name == u).one()
         query = session.query(RadiologyRecord)
         # Check if a date has been passed
@@ -109,7 +107,9 @@ class IradsSearch(object):
                                 base64.b64encode(image.full_size)])
                 results.append(current)
         if (len(results) > 0):
+            conn.close()
             return template.render(username=u, classtype=c, results=results)
         else:
+            conn.close()
             template = self.lookup.get_template('search/search.mako')
             return template.render(username=u, classtype=c, action="fail")

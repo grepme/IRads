@@ -1,4 +1,5 @@
 import cherrypy
+from database.database import Database
 from database.mappings import *
 from helpers import *
 from io import BytesIO
@@ -13,11 +14,7 @@ class IradsUpload(object):
     images to radiology records previosly entered into the system.
     """
 
-    database = None
     lookup = TemplateLookup(directories=['templates'])
-
-    def __init__(self, database):
-        self.database = database
 
     @cherrypy.expose
     @cherrypy.tools.protect(groups=['r'])
@@ -37,7 +34,8 @@ class IradsUpload(object):
         """
         template = self.lookup.get_template('upload/selectrecord.mako')
         (u, c) = getUserInfo()
-        session = self.database.get()
+        conn = Database()
+        session = conn.get()
         user = session.query(User).filter(User.user_name == u).one()
         records = session.query(
             Person).filter(Person.person_id == user.person_id).one(
@@ -47,6 +45,7 @@ class IradsUpload(object):
             record.append(
                 [r.record_id, r.prescribing_date, r.test_date, r.diagnosis,
                  r.description])
+        conn.close()
         return template.render(
             username=u, classtype=c, records=record)
 
@@ -58,7 +57,8 @@ class IradsUpload(object):
         """
         template = self.lookup.get_template('upload/addrecord.mako')
         (u, c) = getUserInfo()
-        session = self.database.get()
+        conn = Database()
+        session = conn.get()
         patients = []
         doctors = []
         # Get a list of all patients
@@ -79,6 +79,7 @@ class IradsUpload(object):
                 username=u, classtype=c, action="noDoctor")
         p = sorted(patients, key=itemgetter('last_name'))
         d = sorted(doctors, key=itemgetter('last_name'))
+        conn.close()
         return template.render(
             username=u, classtype=c, patients=p, doctors=d)
 
@@ -92,7 +93,8 @@ class IradsUpload(object):
         (u, c) = getUserInfo()
         if (patient and doctor and test_type and test_date and prescribing_date
                 and diagnosis and description):
-            session = self.database.get()
+            conn = Database()
+            session = conn.get()
             radiologist = session.query(User).filter(User.user_name == u).one()
             record = RadiologyRecord(
                 patient_id=patient, doctor_id=doctor,
@@ -100,7 +102,7 @@ class IradsUpload(object):
                 test_date=test_date, prescribing_date=prescribing_date,
                 diagnosis=diagnosis, description=description)
             session.add(record)
-            session.commit()
+            conn.CAC()
             return template.render(username=u, classtype=c, action="success")
         else:
             return template.render(
@@ -140,13 +142,14 @@ class IradsUpload(object):
             thumbimage = image.copy()
             thumbimage.thumbnail((200, 200), Image.ANTIALIAS)
             thumbimage.save(thumbstream, "JPEG")
-            session = self.database.get()
+            conn = Database()
+            session = conn.get()
             pacsimage = PacsImage(
                 record_id=id, thumbnail=thumbstream.getvalue(),
                 regular_size=normalstream.getvalue(),
                 full_size=fullstream.getvalue())
             session.add(pacsimage)
-            session.commit()
+            conn.CAC()
             return template.render(username=u, classtype=c, action="added")
         else:
             return template.render(username=u, classtype=c, action="error")

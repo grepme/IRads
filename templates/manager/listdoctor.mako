@@ -28,11 +28,11 @@
       <tbody>
       % for doctor in doctors:
       <tr>
-        <td><a href="/manager/editPerson/${doctor['person_id']}">${doctor['last_name']}</a></td>
-        <td><a href="/manager/editPerson/${doctor['person_id']}">${doctor['first_name']}</a></td>
-        <td><a href="/manager/editPerson/${doctor['person_id']}">${doctor['address']}</a></td>
-        <td><a href="/manager/editPerson/${doctor['person_id']}">${doctor['email']}</a></td>
-        <td><a href="/manager/editPerson/${doctor['person_id']}">${doctor['phone']}</a></td>
+        <td><a href="/manager/editDoctor/${doctor['person_id']}">${doctor['last_name']}</a></td>
+        <td><a href="/manager/editDoctor/${doctor['person_id']}">${doctor['first_name']}</a></td>
+        <td><a href="/manager/editDoctor/${doctor['person_id']}">${doctor['address']}</a></td>
+        <td><a href="/manager/editDoctor/${doctor['person_id']}">${doctor['email']}</a></td>
+        <td><a href="/manager/editDoctor/${doctor['person_id']}">${doctor['phone']}</a></td>
       </tr>
       % endfor
       </tbody>
