@@ -13,7 +13,6 @@
     <%include file="/navbars/navbar.mako" args="currentPage='analysis'"/>
  <div class="container content">
       <h2>Analysis Module <small>Results</small></h2>
-	  ${results}
       <table class="table table-bordered">
         <thead>
           <tr>
