@@ -42,10 +42,6 @@ class IradsManager(object):
             person = Person(
                 first_name=firstname, last_name=lastname,
                 address=address, email=email, phone=phone)
-            '''
-            INSERT INTO persons (first_name, last_name, address, email, phone)
-            VALUES (firstname, lastname, address, email, phone)
-            '''
             session.add(person)
             session.commit()
             return template.render(username=u, classtype=c, action=True)
@@ -85,6 +81,9 @@ class IradsManager(object):
     @cherrypy.expose
     @cherrypy.tools.protect(groups=['a'])
     def listPerson(self):
+        """Returns a page with a list of persons, from which
+        one can be selected for editing of their information.
+        """
         template = self.lookup.get_template('manager/listperson.mako')
         (u, c) = getUserInfo()
         session = self.database.get()
@@ -97,6 +96,10 @@ class IradsManager(object):
     @cherrypy.tools.protect(groups=['a'])
     def addUser(self, preset, username=None,
                 password=None, classtype=None, id=None):
+        """Returns a page that allows the addition of a new user.
+
+        If info was passed on, the user is added to the table.
+        """
         template = self.lookup.get_template('manager/adduser.mako')
         (u, c) = getUserInfo()
         session = self.database.get()
@@ -126,6 +129,12 @@ class IradsManager(object):
     @cherrypy.expose
     @cherrypy.tools.protect(groups=['a'])
     def editUser(self, userToEdit, password=None, password2=None):
+        """Returns a page that allows the editing of the information
+        of a specific user.
+
+        If any information is passed to it,
+        it is verified, and if successful, updated.
+        """
         template = self.lookup.get_template('manager/edituser.mako')
         (u, c) = getUserInfo()
         session = self.database.get()
@@ -154,6 +163,9 @@ class IradsManager(object):
     @cherrypy.expose
     @cherrypy.tools.protect(groups=['a'])
     def listUser(self):
+        """Returns a page with a list of users, from which one can be
+        selected for editing.
+        """
         template = self.lookup.get_template('manager/listuser.mako')
         (u, c) = getUserInfo()
         session = self.database.get()
@@ -165,6 +177,9 @@ class IradsManager(object):
     @cherrypy.expose
     @cherrypy.tools.protect(groups=['a'])
     def listDoctor(self):
+        """Returns a page with a list of doctors, from which one can
+        be selected for editing of their patients.
+        """
         template = self.lookup.get_template('manager/listdoctor.mako')
         (u, c) = getUserInfo()
         session = self.database.get()
