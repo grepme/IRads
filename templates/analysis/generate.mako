@@ -13,7 +13,7 @@
     <%include file="/navbars/navbar.mako" args="currentPage='analysis'"/>
  <div class="container content">
       <h2>Analysis Module <small>Results</small></h2>
-	  ${results}
+	  ${str(results)}
     </div>
   </div>
 <%include file="/footer.mako"/>
