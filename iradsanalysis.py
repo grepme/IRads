@@ -57,6 +57,10 @@ class IradsAnalysis(object):
         query = session.query(RadiologyRecord, RadiologyRecord.test_type, func.count(PacsImage.record_id).label('total')).join(PacsImage).group_by(RadiologyRecord.test_type).order_by(RadiologyRecord.patient_id)
         
 		# All edge cases are inclusive
+		print "START"
+		print start
+		print "END"
+		print end
         if (start != "") and (end != ""):
             query = query.filter(
                 RadiologyRecord.test_date <= end).filter(
