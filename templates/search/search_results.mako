@@ -42,7 +42,11 @@
         <td>${result['description']}</td>
         <td>
         % for image in result['images']:
-            <p><a href="/search/viewImage/${image[0]}" target="_blank"><img src="data:image/jpg;base64,${image[1]}" /></a></p>
+            <p><img src="data:image/jpg;base64,${image[1]}" /><br />
+            <a href="data:image/jpg;base64,${image[2]}" target="_blank">View</a> or
+            <a href="data:image/jpg;base64,${image[2]}" download="${result['test_date']}_test${result['id']}_regular.jpg" target="_blank">download</a> regular size<br />
+            <a href="data:image/jpg;base64,${image[3]}" target="_blank">View</a> or
+            <a href="data:image/jpg;base64,${image[3]}" download="${result['test_date']}_test${result['id']}_full.jpg" target="_blank">download</a> full size</p>
         % endfor
         </td>
       </tr>

@@ -87,6 +87,7 @@ class IradsSearch(object):
         for entry in query.all():
                 # Build a dict to the structure that the template expects
                 current = {}
+                current['id'] = entry.record_id
                 current['patient_name'] = entry.patient.last_name + \
                     ", " + entry.patient.first_name
                 current['doctor_name'] = entry.doctor.last_name + \
@@ -103,7 +104,9 @@ class IradsSearch(object):
                     for image in entry.pacsimage:
                         current['images'].append(
                             [image.image_id,
-                                base64.b64encode(image.thumbnail)])
+                                base64.b64encode(image.thumbnail),
+                                base64.b64encode(image.regular_size),
+                                base64.b64encode(image.full_size)])
                 results.append(current)
         if (len(results) > 0):
             return template.render(username=u, classtype=c, results=results)
