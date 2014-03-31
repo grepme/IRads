@@ -32,6 +32,15 @@
           <label for="keywords">Test Type</label>
           <input type="text" class="form-control" name="keywords" placeholder="Enter test type" />
        </div>
+        <div class="form-group">
+          <label for="patient">Patient</label>
+          <select name="patient" class="form-control">
+		    <option value="_ALLPATIENTS_">All Patients</option>
+          % for patient in patients:
+            <option value="${patient['person_id']}">${patient['last_name']}, ${patient['first_name']}</option>
+          % endfor
+          </select>
+        </div>
         <button class="btn btn-lg btn-primary btn-block btn-add" type="submit">Generate</button>
         % if action == "noparams":
         <p class="lead">Please fill out all fields.</p>
