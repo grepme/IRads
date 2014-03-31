@@ -11,19 +11,34 @@
   <body>
 
     <%include file="/navbars/navbar.mako" args="currentPage='analysis'"/>
-
-    <div class="container">
-
-      <!-- Main component for a primary marketing message or call to action -->
-      <div class="jumbotron">
-        <h1>Navbar example</h1>
-        <p>This example is a quick exercise to illustrate how the default, static and fixed to top navbar work. It includes the responsive CSS and HTML, so it also adapts to your viewport and device.</p>
-        <p>To see the difference between static and fixed top navbars, just scroll.</p>
-        <p>
-          <a class="btn btn-lg btn-primary" href="../../components/#navbar" role="button">View navbar docs &raquo;</a>
-        </p>
-      </div>
-
+ <div class="container content">
+      <h2>Analysis Module <small>Enter criteria:</small></h2>
+      <form role="form" action="/analysis/generate" method="POST">
+        <div class="btn-group" data-toggle="buttons">
+         <label class="btn btn-primary">
+           <input type="radio" name="options" id="option1" value="week"> Week
+         </label>
+         <label class="btn btn-primary">
+           <input type="radio" name="options" id="option2" value="month"> Month
+         </label>
+         <label class="btn btn-primary">
+           <input type="radio" name="options" id="option3" value="year"> Year
+         </label>
+         <label class="btn btn-primary">
+           <input type="radio" name="options" id="option3" value="all"> All Time
+         </label>
+       </div>
+       <div class="form-group">
+          <label for="keywords">Test Type</label>
+          <input type="text" class="form-control" name="keywords" placeholder="Enter test type" />
+       </div>
+        <button class="btn btn-lg btn-primary btn-block btn-add" type="submit">Generate</button>
+        % if action == "noparams":
+        <p class="lead">Please fill out all fields.</p>
+        % elif action == "fail":
+        <p class="lead">No results found.</p>
+        % endif
+      </form>
     </div>
-
+  </div>
 <%include file="/footer.mako"/>

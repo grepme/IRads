@@ -24,3 +24,11 @@ class IradsAnalysis(object):
         template = self.lookup.get_template('analysis/analysis.mako')
         (u, c) = getUserInfo()
         return template.render(username=u, classtype=c)
+		
+	@cherrypy.expose
+	@cherrypy.tools.protect(groups=['a'])
+	def generate(self):
+        """Returns a generated report for the analysis module
+        """
+		template = self.lookup.get_template('analysis/generate.mako')
+		return template.render()
