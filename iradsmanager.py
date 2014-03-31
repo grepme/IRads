@@ -206,10 +206,10 @@ class IradsManager(object):
         if remove and removeId:
             session.query(FamilyDoctor).filter(
                 FamilyDoctor.doctor_id == doctor).filter(
-                    FamilyDoctor.patient_id == patientId).delete()
+                    FamilyDoctor.patient_id == removeId).delete()
             session.commit()
         if addId:
-            familyDoctor = FamilyDoctor(doctor, addId)
+            familyDoctor = FamilyDoctor(doctor_id=doctor, patient_id=addId)
             session.add(familyDoctor)
             session.commit()
         patients = []
@@ -220,8 +220,10 @@ class IradsManager(object):
                 patients.append(entry.patient.__dict__)
         people = []
         for entry in session.query(User).filter(User.class_type == 'p').all():
-            if ((entry.person.__dict__ not in patients) and
-                    (entry.person.__dict__ not in people)):
+            if ((entry.person.__dict__ not in people) and
+                    len(session.query(FamilyDoctor).filter(
+                        FamilyDoctor.doctor_id == doctor).filter(
+                            FamilyDoctor.patient_id == entry.person.person_id).all()) == 0):
                 people.append(entry.person.__dict__)
         return template.render(
             username=u, classtype=c, doctor=doctor, patients=patients,
