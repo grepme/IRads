@@ -23,6 +23,7 @@
           <th>Address</th>
           <th>Email</th>
           <th>Phone</th>
+          <th>Delete</th>
         </tr>
       </thead>
       <tbody>
@@ -33,6 +34,7 @@
         <td><a href="/manager/editPerson/${person['person_id']}">${person['address']}</a></td>
         <td><a href="/manager/editPerson/${person['person_id']}">${person['email']}</a></td>
         <td><a href="/manager/editPerson/${person['person_id']}">${person['phone']}</a></td>
+        <td><a href="/manager/listPerson/delete/${person['person_id']}">Delete</a></td>
       </tr>
       % endfor
       </tbody>

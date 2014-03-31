@@ -21,6 +21,7 @@
           <th>Username</th>
           <th>Access class</th>
           <th>Date Registered</th>
+          <th>Delete</th>
         </tr>
       </thead>
       <tbody>
@@ -37,6 +38,7 @@
         <td><a href="/manager/editUser/${user['user_name']}">Radiologist</a></td>
         % endif
         <td><a href="/manager/editUser/${user['user_name']}">${user['date_registered']}</a></td>
+        <td><a href="/manager/listUser/delete/${user['user_name']}">Delete</a></td>
       </tr>
       % endfor
       </tbody>

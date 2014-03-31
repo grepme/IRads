@@ -80,14 +80,22 @@ class IradsManager(object):
 
     @cherrypy.expose
     @cherrypy.tools.protect(groups=['a'])
-    def listPerson(self):
+    def listPerson(self, delete=None, deleteId=None):
         """Returns a page with a list of persons, from which
         one can be selected for editing of their information.
+
+        Also allows for removal of persons.
         """
         template = self.lookup.get_template('manager/listperson.mako')
         (u, c) = getUserInfo()
         session = self.database.get()
         persons = []
+        if delete and deleteId:
+            session.query(Person).filter(
+                Person.person_id == deleteId).delete()
+            session.query(User).filter(
+                User.person_id == deleteId).delete()
+            session.commit()
         for entry in session.query(Person).order_by(Person.last_name).all():
             persons.append(entry.__dict__)
         return template.render(username=u, classtype=c, persons=persons)
@@ -162,14 +170,20 @@ class IradsManager(object):
 
     @cherrypy.expose
     @cherrypy.tools.protect(groups=['a'])
-    def listUser(self):
+    def listUser(self, delete=None, deleteId=None):
         """Returns a page with a list of users, from which one can be
         selected for editing.
+
+        Also allows for deletion of users.
         """
         template = self.lookup.get_template('manager/listuser.mako')
         (u, c) = getUserInfo()
         session = self.database.get()
         users = []
+        if delete and deleteId:
+            session.query(User).filter(
+                User.user_name == deleteId).delete()
+            session.commit()
         for entry in session.query(User).order_by(User.user_name).all():
             users.append(entry.__dict__)
         return template.render(username=u, classtype=c, users=users)
@@ -216,7 +230,8 @@ class IradsManager(object):
         for entry in session.query(
             FamilyDoctor).filter(
                 FamilyDoctor.doctor_id == doctor).all():
-            if entry.patient.__dict__ not in patients:
+            if ((entry.patient is not None) and
+                    (entry.patient.__dict__ not in patients)):
                 patients.append(entry.patient.__dict__)
         people = []
         for entry in session.query(User).filter(User.class_type == 'p').all():
